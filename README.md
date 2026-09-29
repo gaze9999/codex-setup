@@ -112,6 +112,7 @@ Skill path: skills/<skill-name>
 
 - `agents/AGENTS.md`: 跨專案常駐指示的可攜 source of truth
 - `agents/README.md`: Agent 指示的分層, 授權與同步方式
+- `agents/subagents.config.toml`: 可攜式 subagent model fallback profile, 不含 credentials 或 permissions
 - `SKILL.md`: Skill 的啟用條件, 工作流程, 邊界與輸出
 - `agents/openai.yaml`: Skill 的 interface metadata 與預設啟用 prompt
 - `references/`: 只在相關子任務才載入的詳細知識

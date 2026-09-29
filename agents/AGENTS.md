@@ -40,18 +40,20 @@
 
 - 僅在目前環境與使用者或專案指示允許時使用 subagent 主 agent 依工作量, 獨立性, context 隔離價值與協調成本決定是否委派
 - 主 task 優先完成已授權工作, 僅在使用者明確授權, 工作可獨立交付且預期需要多輪執行的大型 phase 時考慮建立新 task; subagent 僅處理目前 task 內 bounded 且可獨立驗收的子工作
-- 小型或高度耦合工作由單一 agent 處理 只委派目標清楚, ownership 不重疊且可獨立驗收的 slice, 不把 subagent 視為省 token 方法
+- 主 agent 保留需求解讀, Architecture / Pattern 決策, 跨模組推理, context-heavy 實作, 整合, 最終 diff review 與驗收 小型或高度耦合工作直接處理, 只委派 ownership 清楚且可獨立驗收的 slice, 不把 subagent 視為省 token 方法
 - 平行工作必須互不依賴且不共用可變狀態 依賴工作應依序進行, 不重複調查或同時編輯相同檔案
 - 大型獨立實作可由一個 worker 擁有 discovery, edit, check 與 in-scope fix 的完整迴圈 主 agent 一次交付必要 context, 使用支援的等待機制, 最後批次 review 與整合, 不做無意義進度輪詢
-- 派工前區分已確認做法的執行與仍需決定做法的問題 前者可用較低成本 model, 後者由具備足夠推理能力的 agent 先縮小不確定性, 再委派明確的工作 不逐級嘗試所有 model 或 reasoning level
+- Subagent 預設用目前環境支援的 GPT-6 Sol 處理非簡單實作, Debug, UI / state / data-flow, 整合與深入 review; 做法, ownership 與驗收清楚的搜尋, 文件, Test, 重複修改與孤立實作可用 GPT-6 Luna; 仍需決定 Architecture 或跨模組做法時先由主 agent 縮小不確定性, 不依檔案數判定難度
 - 將已確認事實, 嘗試結果與證據交給接手 agent; 重複失敗, 範圍擴張或需要架構決策時停止原方向並重新選擇負責者 主 agent 負責整合與最終驗證
-- 保留使用者選定的主 model, 不因 model 或角色可用就委派或升級 依實際任務與當下支援狀態決定 model 和 reasoning, 最新能力與限制以官方文件為準
+- Reasoning 通常省略; 需要明確設定時以 Sol Medium / Luna High 為起點, 困難工作才選更高 effort Luna Max 僅為可接受等待的困難 bounded 工作選項, 不視為固定省成本設定; 不用增加推理修補缺少規格, context 或工具故障, 不逐級嘗試所有設定
+- 個人 subagent 預設與穩定 role 的 model pin 放在 configuration, 變動工作依 slice 選擇; role pin 優先於 spawn/default, 只固定 model 會保留先前解析的 effort, 派工前確認相容性; Main 的 model 與 reasoning 由開啟對話時選擇, 不因 model 可用就委派或升級
 
 ## 驗證
 
-- 驗證範圍與變更風險相符, 選擇足以證明目前行為的最快且最簡單檢查
-- 依需要執行 Type Check, Test, Build, Lint, Syntax Validation, API 相容性, Integration Test 或實際操作, 不把部分通過推論成其他檢查通過
-- 可執行的事項以實際結果判斷 無法執行時說明未驗證項目與原因, 繼續不受阻礙的獨立檢查
+- 依本次 diff, 改變的行為, 受影響相依與 acceptance criteria 選擇最小且足夠的安全驗證; 不只按修改檔名判斷範圍, 不預設執行全 repository Test, Build 或 E2E
+- 優先使用能檢驗修改行為的既有 focused check; 文字與治理規則以 readback, 引用與 diff 檢查為主, 設定使用專用 Validator, 程式行為依需要選 targeted Test, Type Check, Build 或操作驗證; 不為可逆低風險變更建立重複實作的測試或額外測試架構
+- 只有具體相依, 共用介面, 整合或安全風險, focused check 失敗或不足, 或適用的既有驗收要求時才擴大到相關範圍; 擴大前說明待排除的風險, 不藉機修復無關功能或環境, 保留必要的 CI / release 檢查
+- 只回報實際檢查及其證明範圍, 不把 focused check 通過推論成其他檢查通過; 無法執行時說明未驗證項目與原因, 繼續不受阻礙且仍在修改影響範圍內的檢查
 - 同一檢查已通過且之後沒有相關修改, 新失敗或未解風險時不重複執行
 
 ## Git 與檔案

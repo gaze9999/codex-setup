@@ -16,4 +16,4 @@
 
 ## Verification
 
-- Focused checks: <actual command or documented check and the changes it covers>
+- Focused checks: <smallest applicable commands, changed behavior and affected dependencies covered, and concrete conditions requiring broader checks>

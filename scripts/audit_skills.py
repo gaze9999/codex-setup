@@ -67,12 +67,9 @@ def audit_skill(skill: Path, errors: list[str]) -> None:
 
 
 def audit_links(repo: Path, errors: list[str]) -> int:
-    global_agents = repo / "agents" / "AGENTS.md"
-    agent_guide = repo / "agents" / "README.md"
     documents = [
         repo / "README.md",
-        *([global_agents] if global_agents.is_file() else []),
-        *([agent_guide] if agent_guide.is_file() else []),
+        *sorted((repo / "agents").rglob("*.md")),
         *sorted((repo / "skills").rglob("*.md")),
     ]
     checked = 0
