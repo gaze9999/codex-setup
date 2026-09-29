@@ -1,6 +1,8 @@
 interface:
   display_name: "Component Member Order"
   short_description: "Safely organize Angular component class members"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon.svg"
   default_prompt: "Use $component-member-order to organize Angular component class members by responsibility and feature flow without changing behavior."
 
 policy:

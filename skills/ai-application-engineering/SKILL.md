@@ -1,6 +1,10 @@
 ---
 name: ai-application-engineering
 description: Build, refactor, diagnose, or review production LLM, agent, tool-calling, RAG, embedding, and model-runtime integrations across providers. Use for AI application code and workflow behavior, not ordinary prompt writing or generic image generation.
+metadata:
+  version: "v0.4.2"
+  author: "gaze9999"
+  repository: "https://github.com/gaze9999/codex-setup"
 ---
 
 # AI Application Engineering

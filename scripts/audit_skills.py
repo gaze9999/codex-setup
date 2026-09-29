@@ -11,9 +11,11 @@ import re
 import subprocess
 import sys
 from pathlib import Path
-from urllib.parse import unquote
+from urllib.parse import unquote, urlsplit
 
 FRONTMATTER_RE = re.compile(r"\A---\r?\n(.*?)\r?\n---(?:\r?\n|\Z)", re.DOTALL)
+METADATA_RE = re.compile(r"(?m)^metadata:[ \t]*\n((?:[ \t]+[^\n]*(?:\n|$))*)")
+RELEASE_TAG_RE = re.compile(r"v\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?(?:\+[0-9A-Za-z.-]+)?")
 LINK_RE = re.compile(r"!?\[[^\]]*\]\(([^)]+)\)")
 INLINE_PATH_RE = re.compile(r"`((?:scripts|references)/[^`\s]+)`")
 SKIP_PARTS = {"__pycache__"}
@@ -36,7 +38,7 @@ def digest(path: Path) -> str:
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def audit_skill(skill: Path, errors: list[str]) -> None:
+def audit_skill(skill: Path, errors: list[str], release_tag: str | None = None) -> None:
     skill_file = skill / "SKILL.md"
     metadata_file = skill / "agents" / "openai.yaml"
     if not skill_file.is_file():
@@ -54,6 +56,18 @@ def audit_skill(skill: Path, errors: list[str]) -> None:
             errors.append(f"name:{skill.name}={name or 'missing'}")
         if not description or len(description) > 1024:
             errors.append(f"description:{skill.name}")
+        metadata = METADATA_RE.search(block)
+        metadata_block = metadata.group(1) if metadata else ""
+        version = scalar(metadata_block, "version")
+        if not version or not RELEASE_TAG_RE.fullmatch(version):
+            errors.append(f"metadata_version:{skill.name}={version or 'missing'}")
+        elif release_tag and version != release_tag:
+            errors.append(f"metadata_version:{skill.name}={version},expected={release_tag}")
+        if not scalar(metadata_block, "author"):
+            errors.append(f"metadata_author:{skill.name}")
+        repository = urlsplit(scalar(metadata_block, "repository") or "")
+        if repository.scheme != "https" or not repository.netloc:
+            errors.append(f"metadata_repository:{skill.name}")
     if not metadata_file.is_file():
         errors.append(f"missing_metadata:{skill.name}/agents/openai.yaml")
         return
@@ -148,6 +162,7 @@ def main() -> int:
     parser = argparse.ArgumentParser(description="Audit all custom skills with compact output.")
     parser.add_argument("--repo", type=Path, help="Repository root; defaults to this script's parent repository.")
     parser.add_argument("--installed-root", type=Path, help="Optional local skills mirror root.")
+    parser.add_argument("--release-tag", help="Require every skill version to match this release tag.")
     parser.add_argument("--json", action="store_true")
     args = parser.parse_args()
     repo = (args.repo or Path(__file__).resolve().parents[1]).resolve()
@@ -163,7 +178,17 @@ def main() -> int:
         errors.append("missing_agent_guide:agents/README.md")
     skills = sorted(path for path in skill_root.iterdir() if path.is_dir())
     for skill in skills:
-        audit_skill(skill, errors)
+        audit_skill(skill, errors, release_tag=args.release_tag)
+    versions = set()
+    for skill in skills:
+        if not (skill / "SKILL.md").is_file():
+            continue
+        frontmatter = FRONTMATTER_RE.match((skill / "SKILL.md").read_text(encoding="utf-8"))
+        metadata = METADATA_RE.search(frontmatter.group(1)) if frontmatter else None
+        if metadata:
+            versions.add(scalar(metadata.group(1), "version"))
+    if len(versions) > 1:
+        errors.append("metadata_versions: skills must use one repository release tag")
     links = audit_links(repo, errors)
     scripts = audit_python(repo, errors)
     mirrors = audit_mirrors(repo, args.installed_root.resolve(), errors) if args.installed_root else 0

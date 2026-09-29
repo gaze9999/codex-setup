@@ -3,6 +3,9 @@ name: doc-updater
 description: Update or synchronize existing documentation only when the user explicitly requests it, verifiable implementation-change evidence exists, and a target document is identified.
 metadata:
   short-description: Minimize documentation updates from implementation evidence
+  version: "v0.4.2"
+  author: "gaze9999"
+  repository: "https://github.com/gaze9999/codex-setup"
 ---
 
 # Doc Updater

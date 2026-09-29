@@ -1,6 +1,8 @@
 interface:
   display_name: "Unity Development"
   short_description: "Implement and verify Unity project changes safely"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon.svg"
   default_prompt: "Use $unity-development to inspect this project's Unity version, packages, serialized assets, pipelines, and build targets, then implement and verify the requested Unity change without breaking asset or GUID contracts."
 
 policy:

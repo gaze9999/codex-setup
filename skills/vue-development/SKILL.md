@@ -1,6 +1,10 @@
 ---
 name: vue-development
 description: Implement, refactor, diagnose, or review Vue, Nuxt, or Vite-based applications while preserving the detected framework versions, component contracts, state, routing, SSR or hydration, styling, and build behavior.
+metadata:
+  version: "v0.4.2"
+  author: "gaze9999"
+  repository: "https://github.com/gaze9999/codex-setup"
 ---
 
 # Vue Development

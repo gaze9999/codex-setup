@@ -1,6 +1,8 @@
 interface:
   display_name: "README Maintainer"
   short_description: "Create accurate repository README documentation"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon.svg"
   default_prompt: "Use $readme-maintainer to inspect the repository's actual source, configuration, scripts, tests, deployment, and existing docs, then create or substantially improve an accurate and scannable README."
 
 policy:

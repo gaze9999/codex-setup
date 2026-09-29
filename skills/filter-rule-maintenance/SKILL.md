@@ -1,6 +1,10 @@
 ---
 name: filter-rule-maintenance
 description: Add, modify, diagnose, or verify AdGuard, uBlock Origin, DNS filter, hosts, proxy, or similar blocking and rewrite rules with parser-aware minimal matching and false-positive control. Do not use for generic YAML, JSON, or TOML editing.
+metadata:
+  version: "v0.4.2"
+  author: "gaze9999"
+  repository: "https://github.com/gaze9999/codex-setup"
 ---
 
 # Filter Rule Maintenance

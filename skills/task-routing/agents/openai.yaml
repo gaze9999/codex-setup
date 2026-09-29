@@ -1,6 +1,8 @@
 interface:
   display_name: "Task Routing"
   short_description: "Choose a task owner and prepare a compact handoff"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon.svg"
   default_prompt: "Use $task-routing to choose whether this work should stay here, use a separate task or fork, or use a subagent. Carry out a route only when my request authorizes it, and give the next owner a compact handoff."
 
 policy:

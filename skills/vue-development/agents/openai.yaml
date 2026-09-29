@@ -1,6 +1,8 @@
 interface:
   display_name: "Vue Development"
   short_description: "Implement Vue and Nuxt features with project fidelity"
+  icon_small: "./assets/icon-small.svg"
+  icon_large: "./assets/icon.svg"
   default_prompt: "Use $vue-development to inspect the detected Vue, Nuxt, or Vite stack and its component, state, routing, SSR, styling, and build contracts, then implement and verify the requested change."
 
 policy:

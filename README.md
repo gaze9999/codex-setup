@@ -103,6 +103,8 @@ Skill path: skills/<skill-name>
 
 ## Release 封裝
 
+- 全部 Skill 共用 repository 的 release Tag, `SKILL.md` 的 `metadata.version` 使用完整 Tag, 例如 `v0.4.2`; `metadata.author` 保存公開署名, `metadata.repository` 保存來源 repository URL
+- 發布新 Tag 前, 將全部 Skill 的版本同步為該 Tag, 再同步本機安裝鏡像; 以 `python scripts/audit_skills.py --release-tag v0.4.2` 檢查版本, metadata 與既有發布驗證, 將範例 Tag 換成當次版本
 - 每個 release 為每個 Skill 提供獨立 ZIP asset, 不只依賴 GitHub 自動產生的 source archive
 - ZIP asset basename 與 Skill 目錄相同, 頂層只包含該 Skill 目錄
 - 封裝前排除 `__pycache__`, `*.pyc`, local logs, temporary output, secret 與 machine-specific files
