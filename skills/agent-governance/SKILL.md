@@ -3,7 +3,7 @@ name: agent-governance
 description: Create, audit, or simplify project AGENTS.md layers and Codex subagent roles. Use for agent-governance work, including a new project setup, not ordinary implementation or general code review.
 metadata:
   short-description: Agent governance, role boundaries, and instruction minimization
-  version: "v0.4.3"
+  version: "v0.4.4"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---
