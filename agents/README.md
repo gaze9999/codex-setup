@@ -21,11 +21,15 @@ Skills 仍從 repository 的 `skills/` 目錄獨立安裝, 依根目錄 [README]
 
 ## 個人 model defaults
 
-[Global AGENTS.md](./AGENTS.md) 的 Delegation 與 model selection 保存短版 Sol / Luna 選擇原則與 Main 的責任, 不要求額外讀取分流文件 [subagents.config.toml](./subagents.config.toml) 提供 unpinned subagent Sol 的 model 預設, Main 由開啟對話時選擇, 不要求每次派工指定 effort; 專案 role ownership 與限制由各專案治理檔保存
+[Global AGENTS.md](./AGENTS.md) 的 Delegation 與 model selection 保存短版 Sol / Luna 選擇原則與 Main 的責任, 不要求額外讀取分流文件 [subagents.config.toml](./subagents.config.toml) 提供 unpinned subagent `gpt-6.1-sol` 的 model 預設, Main 由開啟對話時選擇, 不要求每次派工指定 effort; 專案 role ownership 與限制由各專案治理檔保存
 
 安裝 script 只複製這兩個公開檔案, 不覆寫既有 `config.toml`, secrets, permissions 或 MCP 設定 CLI 可用 `codex --profile subagents`; Desktop / IDE 若要作為一般預設, 將 profile 的 `agents.default_subagent_model` 合併到本機 `config.toml` 對應位置, 保留其他設定 專案與當次明確選擇仍可能優先; 不把 profile 安裝完成描述為現有 task 已切換 model
 
-Project role 檔若需要依 slice 選擇 Sol 或 Luna, 應保持 model/effort 未固定, 並由派工選擇 model, effort 可省略 職責穩定且範圍明確的角色可依[近期官方 subagent 範例](https://learn.chatgpt.com/docs/agent-configuration/subagents)與可驗證結果固定 model; role pin 會優先於 spawn/default, 只固定 model 時保留先前解析的 effort, 必須確認相容性 需要改用另一個 tier 時, 使用相同 ownership 與權限限制的 unpinned role; 不把顯示名稱或 model 自述當成實際 configuration 證據
+Project role 檔若需要依 slice 選擇 Sol 或 Luna, 應保持 model/effort 未固定; 職責穩定且範圍明確的角色可依[官方 subagent 文件](https://learn.chatgpt.com/docs/agent-configuration/subagents)與可驗證結果固定 model; Main 的直接實作能力與最終驗收責任保留, 獨立 reviewer 依風險使用
+
+Codex 先依 explicit spawn, `[agents]` defaults 與 parent 解析設定, 再套用 custom role; role 的 model/effort pin 優先; explicit spawn 或 `[agents]` default 選定 model 且都未指定 effort 時, 使用該 model 的預設 effort; 兩者都未指定 model/effort 時才繼承 parent; role 只固定 model 時保留此前解析的 effort, 必須確認支援; 需要改用另一個 tier 時, 使用相同 ownership 與權限限制的 unpinned role; 不把顯示名稱, model 自述或 TOML 解析成功當成 runtime reload 證據
+
+2026-09-30 核對 [GPT-6.1 Sol](https://developers.openai.com/api/docs/models/gpt-6.1-sol) 與 [GPT-6 Sol](https://developers.openai.com/api/docs/models/gpt-6-sol): 標準 API 每 1M tokens 的 input / output 同為 USD 2 / 10, cached input 分別為 USD 0.10 / 0.20; 此 profile 改用 6.1 Sol, 不宣稱已量測 latency 或 Codex 帳號用量差異
 
 ## 指示結構依據
 

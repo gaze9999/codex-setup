@@ -3,7 +3,7 @@ name: context-brief
 description: Convert explicitly provided implementation-contract material into reusable Codex Markdown context briefs; do not use for ordinary summaries or one-off coding tasks.
 metadata:
   short-description: Create concise, traceable coding context briefs
-  version: "v0.4.2"
+  version: "v0.4.3"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---

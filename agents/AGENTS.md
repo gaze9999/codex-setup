@@ -38,15 +38,12 @@
 
 ## Delegation 與 model selection
 
-- 僅在目前環境與使用者或專案指示允許時使用 subagent 主 agent 依工作量, 獨立性, context 隔離價值與協調成本決定是否委派
-- 主 task 優先完成已授權工作, 僅在使用者明確授權, 工作可獨立交付且預期需要多輪執行的大型 phase 時考慮建立新 task; subagent 僅處理目前 task 內 bounded 且可獨立驗收的子工作
-- 主 agent 保留需求解讀, Architecture / Pattern 決策, 跨模組推理, context-heavy 實作, 整合, 最終 diff review 與驗收 小型或高度耦合工作直接處理, 只委派 ownership 清楚且可獨立驗收的 slice, 不把 subagent 視為省 token 方法
-- 平行工作必須互不依賴且不共用可變狀態 依賴工作應依序進行, 不重複調查或同時編輯相同檔案
-- 大型獨立實作可由一個 worker 擁有 discovery, edit, check 與 in-scope fix 的完整迴圈 主 agent 一次交付必要 context, 使用支援的等待機制, 最後批次 review 與整合, 不做無意義進度輪詢
-- Subagent 預設用目前環境支援的 GPT-6 Sol 處理非簡單實作, Debug, UI / state / data-flow, 整合與深入 review; 做法, ownership 與驗收清楚的搜尋, 文件, Test, 重複修改與孤立實作可用 GPT-6 Luna; 仍需決定 Architecture 或跨模組做法時先由主 agent 縮小不確定性, 不依檔案數判定難度
-- 將已確認事實, 嘗試結果與證據交給接手 agent; 重複失敗, 範圍擴張或需要架構決策時停止原方向並重新選擇負責者 主 agent 負責整合與最終驗證
-- Reasoning 通常省略; 需要明確設定時以 Sol Medium / Luna High 為起點, 困難工作才選更高 effort Luna Max 僅為可接受等待的困難 bounded 工作選項, 不視為固定省成本設定; 不用增加推理修補缺少規格, context 或工具故障, 不逐級嘗試所有設定
-- 個人 subagent 預設與穩定 role 的 model pin 放在 configuration, 變動工作依 slice 選擇; role pin 優先於 spawn/default, 只固定 model 會保留先前解析的 effort, 派工前確認相容性; Main 的 model 與 reasoning 由開啟對話時選擇, 不因 model 可用就委派或升級
+- 僅在目前環境與使用者或專案指示允許時使用 subagent; 主 task 優先完成已授權工作, 只有使用者明確授權且可獨立交付並預期需要多輪執行的大型 phase 才考慮建立新 task; subagent 處理目前 task 內 bounded 且可獨立驗收的子工作
+- Main 保留需求解讀, Architecture / Pattern 與跨模組決策, 必要的直接實作與 context-heavy 工作, 整合與最終驗收; 依相依關係, ownership, context 隔離價值與協調成本選擇直接完成, 探索後完成, 單一 worker 或獨立平行工作; 同一耦合功能由同一 owner 完成, 不為使用 subagent 拆分工作或宣稱省 token
+- 平行工作需有明確 ownership, 已確認的共享介面與可隔離的可變資源; 不同檔案或 worktree 仍需檢查語意與執行環境相依, 依賴工作依序進行
+- Worker 擁有已授權 slice 的 discovery, edit, check 與 in-scope fix 完整迴圈; 依角色交付足夠 context 與證據, 避免 Main 重複同一調查或逐步派回; 新架構決策, 規格矛盾, 共享介面變更或 ownership 擴張時交回 Main 決定
+- 個人 subagent fallback 與穩定 role 的 model pin 放在 configuration; 非簡單實作, Debug, UI / state / data-flow, 整合與深入 review 優先用目前環境支援的 GPT-6.1 Sol, 做法與驗收清楚的 bounded 工作可用 GPT-6 Luna; 依實際不確定性選擇, 不依角色名稱或檔案數決定; effort 通常省略, 明確設定時以 Sol Medium / Luna High 為起點並確認支援, 不用更高 effort 補缺少規格或工具故障; Main 的 model 與 reasoning 由開啟對話時選擇
+- 獨立 review 依具體風險與補足的驗證範圍啟用; Main 以需求, 實際 diff 與對應程式碼狀態的檢查驗收, 不只採信完成宣告; 重複失敗或 context 遺失時停止原方向, 將已確認事實, 嘗試與失敗證據交給接手 owner
 
 ## 驗證
 

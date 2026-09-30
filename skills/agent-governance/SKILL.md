@@ -3,7 +3,7 @@ name: agent-governance
 description: Create, audit, or simplify project AGENTS.md layers and Codex subagent roles. Use for agent-governance work, including a new project setup, not ordinary implementation or general code review.
 metadata:
   short-description: Agent governance, role boundaries, and instruction minimization
-  version: "v0.4.2"
+  version: "v0.4.3"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---
@@ -54,7 +54,7 @@ Keep the smallest instruction set that preserves authorization, contracts, proje
 
 - When creating, splitting, or relocating global, root, nested, or tool-specific agent instructions, read [instruction-layering.md](references/instruction-layering.md).
 - When changing delegation, worker ownership, subagent context, or model/reasoning routing, read [delegation-routing.md](references/delegation-routing.md).
-- When changing compaction, task switching, handoffs, memory, or Context Brief policy, read [context-continuity.md](references/context-continuity.md).
+- When changing role context, compaction, task switching, handoffs, memory, or Context Brief policy, read [context-continuity.md](references/context-continuity.md).
 
 ## Verify and deliver
 

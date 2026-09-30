@@ -104,11 +104,53 @@ Skill path: skills/<skill-name>
 ## Release 封裝
 
 - 全部 Skill 共用 repository 的 release Tag, `SKILL.md` 的 `metadata.version` 使用完整 Tag, 例如 `v0.4.2`; `metadata.author` 保存公開署名, `metadata.repository` 保存來源 repository URL
-- 發布新 Tag 前, 將全部 Skill 的版本同步為該 Tag, 再同步本機安裝鏡像; 以 `python scripts/audit_skills.py --release-tag v0.4.2` 檢查版本, metadata 與既有發布驗證, 將範例 Tag 換成當次版本
 - 每個 release 為每個 Skill 提供獨立 ZIP asset, 不只依賴 GitHub 自動產生的 source archive
 - ZIP asset basename 與 Skill 目錄相同, 頂層只包含該 Skill 目錄
-- 封裝前排除 `__pycache__`, `*.pyc`, local logs, temporary output, secret 與 machine-specific files
-- 發布前驗證 Skill metadata, ZIP 結構, repository diff 與實際 asset 清單
+- 整合 ZIP 的頂層直接放各 Skill 目錄, 不增加外層 `skills/`, 也不包入個別 ZIP
+
+### 自動版本與 ZIP
+
+在 repository 根目錄執行 [prepare_release.py](./scripts/prepare_release.py), 使用 Python 3.10 以上, 不需安裝額外套件:
+
+```powershell
+# 目前 Skill metadata 與本機 Git Tag 的最高版本 +0.0.1
+python scripts/prepare_release.py
+
+# 手動指定版本, 也接受 v0.5.0
+python scripts/prepare_release.py --version 0.5.0
+
+# 只預覽, 不改版本或產生檔案
+python scripts/prepare_release.py --dry-run
+```
+
+每次執行會動態尋找 `skills/` 下包含 `SKILL.md` 的 Skill 目錄, 將全部 `metadata.version` 設成當次 Tag, 並產生:
+
+```text
+dist/<tag>/
+├── <skill-name>.zip        # 每個目前存在的 Skill 各一份
+├── all-skills-<tag>.zip    # 直接包含全部 Skill 目錄及原始檔案
+└── release-manifest.json  # 當次清單與 ZIP SHA-256
+```
+
+- 新增或刪除 Skill 不需改 script; 改名時先同步 `SKILL.md` 的 `name` 與資料夾名稱, 其他引用依需要調整
+- 缺少 `metadata` 時會加入版本; 缺少 author 或 repository 時, 若其他 Skill 只有一種既有值則沿用, 已有值保留
+- 沒有任何版本紀錄時從 `v0.0.1` 開始; 自動遞增只讀本機 metadata 與 Tag, 不查遠端 Tag
+- ZIP 使用當下 working tree 內容, 包含新增而未提交的檔案; 有 Git 時遵循忽略規則, 並排除常見快取, logs, 暫存及 secret 檔案; `.env.example` 保留
+- 封裝後驗證 ZIP 結構, CRC 與逐檔內容; 若同版本重新執行, 只取代此 script 管理且未被另行修改的輸出, 清除已刪除或改名 Skill 的舊 ZIP
+- 若封裝後再改 Skill, 用 `--version <same-tag>` 重封裝; 不帶版本會再增加一次 patch
+- 可用 `--repo <path>` 指定另一個具有 `skills/` 的 repository, 或以 `--output-dir <path>` 指定輸出根目錄; 每個 Tag 仍有獨立子目錄
+
+這支 script 準備版本與封裝, 不同步安裝鏡像或執行 Git / GitHub 發布 封裝完成後, 依「安裝與同步」將 Skill 單向同步到本機, 用當次 Tag 驗證, 再 commit, push, 建立同名 Tag 並將當次全部 ZIP 上傳 GitHub Release:
+
+```powershell
+python scripts/audit_skills.py --release-tag <tag> --installed-root "$env:USERPROFILE\.codex\skills"
+```
+
+發布前核對 repository diff 與實際 asset 清單 若變更此 helper, 可執行 focused tests:
+
+```powershell
+python -m unittest discover -s tests -p test_prepare_release.py
+```
 
 ## 檔案角色
 

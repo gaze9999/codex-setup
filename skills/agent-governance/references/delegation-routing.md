@@ -1,16 +1,36 @@
 # Delegation and model routing
 
-Use this reference only when governance work changes subagents, roles, worker ownership, or model and reasoning selection.
+Use this reference only when governance work changes subagents, roles, worker ownership, or model and reasoning selection. For role context or handoff design, also read [context-continuity.md](context-continuity.md).
 
-- Delegate only when current user, project, and environment policy allow it. The primary agent decides from workload, independence, context-isolation value, coordination cost, and acceptance burden.
-- Keep small or tightly coupled work with one agent. Use the fewest workers that provide a clear quality, elapsed-time, or context-isolation benefit; subagents perform separate model and tool work and are not a token-saving claim.
-- Parallelize only independent slices with disjoint ownership and no shared mutable state. Sequence dependent work and avoid duplicate investigation.
-- Give a worker a self-contained goal, confirmed contracts, owned files or modules, must-preserve constraints, exclusions, evidence pointers, acceptance criteria, and stop condition. The primary agent owns integration and final acceptance.
-- A substantial independent implementation may stay with one worker through discovery, edit, checks, and in-scope fixes. Prefer supported waiting and one batched final review over progress polling or repeated partial handoffs.
-- Keep portable Skills model-agnostic; store personal subagent defaults in maintained configuration, brief cross-project selection preferences in global instructions, and substantial procedures in a conditional guide only when needed. Keep Main selection in chat/session settings. Keep requirement interpretation, architecture/pattern decisions, cross-module decisions, context-heavy implementation, integration, final review, and acceptance with the primary owner unless explicitly reassigned. Verify supported models and effort from current official documentation.
-- Decide whether a slice executes a known approach or must determine the approach. Assign bounded execution to an efficient supported model; use a stronger reasoner when the root cause, architecture, or cross-system impact is unresolved. A difficult but bounded problem may need more effort without needing a broader model.
-- Select a suitable model and reasoning level from the initial uncertainty, risk, tools, public-interface impact, and verification burden rather than stepping through every level. Account for retries, coordination, and integration when comparing cost or latency; do not claim savings without measured evidence.
-- Pass confirmed findings to the next worker so it does not repeat the same investigation. Stop and reroute when attempts repeat the same failure, ownership expands, context is lost, or a new architecture decision is required; include facts, attempts, evidence, open questions, and affected files.
-- Add a separate reviewer only when independent review adds meaningful coverage. The primary agent accepts the integrated result after focused verification, not solely from a worker's completion claim.
-- Resolve current configuration precedence before changing pins. In Codex, a custom role's model/effort pin overrides the corresponding spawn value; unpinned values resolve from explicit spawn, configured subagent defaults, then parent inheritance. Keep variable-workload roles unpinned with a suitable configured fallback; a stable narrow role may pin a supported model when current evidence justifies it. A model-only role pin retains previously resolved effort, so verify compatibility. To change tiers, use an unpinned role with equivalent ownership and permission constraints. Verify actual configuration metadata; model self-identification and a parsed file do not establish runtime reload or serving identity.
-- Higher effort is for reasoning difficulty, not missing context, broken tooling, or unresolved source authority. Maximum effort is not automatically the cost-first choice; compare total work per accepted result, including retries, review, and repairs. A recommendation does not switch models or grant delegation authority.
+## Choose the execution mode
+
+- Delegate only when current user, project, and environment policy allow it. The primary agent retains requirement interpretation, architecture/pattern and cross-module decisions, necessary direct implementation, integration, final review and acceptance unless explicitly reassigned.
+- Choose from the work's independence, context-isolation value, coordination cost and acceptance burden. Direct execution and no subagents are normal outcomes; separate model and tool work is not a token-saving claim.
+
+| Mode | Use when | Ownership |
+|---|---|---|
+| Direct execution | The work is small, tightly coupled or already understood | Main completes discovery, edits and checks |
+| Exploration then execution | A bounded unfamiliar area requires substantial reading | Explorer returns evidence; Main decides and implements or assigns a worker |
+| One complete worker slice | Goal, boundaries and acceptance are clear | One worker completes discovery, edit, checks and in-scope fixes |
+| Independent parallel slices | Shared interfaces are settled and mutable resources can be isolated | Each worker owns one slice; Main integrates and accepts the combined result |
+
+- Keep one coupled feature path with one implementation owner, including its state, callers, interfaces and related checks. Splitting by file extension or using different files/worktrees does not establish semantic independence.
+- Before parallel writes, confirm disjoint ownership, shared-interface decisions, test data, ports, temporary outputs and browser sessions. Sequence dependent steps and shared mutable resources; choose concurrency that the primary owner can actually review and integrate.
+
+## Worker loop and acceptance
+
+- Give the worker a self-contained goal, confirmed requirements and sources, owned files/modules, must-preserve constraints, exclusions, relevant checkout and concurrent-work state, acceptance criteria and stop condition. Do not require rediscovery of supported conclusions.
+- Let the worker choose implementation details within those boundaries and complete discovery, edit, focused checks and necessary repairs. Prefer supported waiting and one final review over repeated partial handoffs or progress polling.
+- Return to Main when specifications conflict, a shared interface must change, ownership or authorization must expand, or the approach repeatedly fails. Explain facts, attempts, failure evidence and the decision needed; continue independent authorized work when possible.
+- Return the source revision or relevant diff state, changed behavior/files, actual checks and their results, unverified boundaries and next action. Verification applies only to the checked code state; later relevant edits require affected checks again.
+- Add independent review only for concrete coverage or risk. Give the reviewer original requirements, acceptance criteria, applicable rules and the actual diff/revision with relevant code; avoid leading it with the implementer's conclusions.
+- Findings identify file/symbol, trigger, expected versus actual behavior, impact and evidence. Separate defects from questions, allow no findings, and avoid style-only or out-of-scope blockers. Main evaluates findings before assigning in-scope repairs to the implementation owner and accepting the integrated result.
+
+## Models, context and permissions
+
+- Keep portable Skills and templates model-agnostic. Personal fallbacks belong in maintained configuration; brief selection preferences belong in global instructions. Main selection remains in chat/session settings.
+- Decide whether a slice executes a known approach or must determine it. Select supported model and effort from uncertainty, risk, public-interface impact, tools and verification burden rather than trying every effort level. Higher effort cannot resolve missing authority or broken tooling. Maximum effort may fit a difficult bounded task when its latency is acceptable; compare total work per accepted result, including retries, review and repairs, before claiming savings or speed.
+- Resolve current configuration precedence before changing pins. In Codex, explicit spawn values override corresponding `[agents]` defaults. If either selects a model and neither supplies effort, the child uses that model's default effort; when no model/effort is configured, it inherits the parent settings.
+- Custom role model/effort pins override the previously resolved settings. A model-only pin retains previously resolved effort, so check compatibility. Keep variable-workload roles unpinned with a suitable fallback; use an unpinned role with equivalent ownership and permissions when a pinned role's model does not fit.
+- Explorer and Reviewer remain read-only. Match role instructions with sandbox and tool permissions, then verify the effective spawned configuration: live parent runtime overrides may supersede role sandbox defaults. A parsed file, model self-identification or updated mirror does not prove runtime reload.
+- Stop and reroute repeated failures, lost context or expanded ownership. Pass confirmed facts, attempts and evidence to the next owner; a model recommendation does not switch a session or authorize delegation.
