@@ -22,10 +22,19 @@
 
 ## 程式碼與技術選擇
 
-- 採用新 API, 語法或實作前先確認目前 Framework, Language, Runtime, 套件與工具版本支援, 優先使用目前版本可穩定使用且官方建議的 API
-- 新技術應有明確的效能, 型別安全, 可維護性, 可讀性或複雜度效益, 僅用於必要範圍, 不因新舊本身決定取捨
+- 採用新 API, 語法或實作前先確認目前 Framework, Language, Runtime, 套件, 工具版本與目標執行環境支援, 優先使用目前版本可穩定使用且官方建議的 API; JS / TS 另核對 `target`, `lib`, Browserslist 與既有 polyfill, 不把型別存在或編譯通過當成 runtime 支援, 不擅自升級版本或新增 polyfill
+- 新技術應有明確的效能, 型別安全, 可維護性, 可讀性或複雜度效益; 行為等價且版本支援時, 優先能直接表達目的的標準語法與原生 API, 如 JS / TS 的 `at()`, `findLast()`, `Object.hasOwn()`, `Object.groupBy()` 與 Set 集合操作, 避免不必要的手寫 helper 或額外相依; 僅用於必要範圍, 不因新舊本身決定取捨
+- 替換既有操作前檢查 mutation, 參照與 reactive 行為, 迭代順序, 結果型別, index 邊界與錯誤語意; JS / TS 要保留來源陣列時可優先評估 `toSorted()`, `toReversed()`, `toSpliced()` 與 `with()`, 非 mutation 不代表深層複製或可直接替換原地更新
+- 非同步工作依相依關係與失敗需求選擇依序或並行; JS / TS 全部成功才繼續時用 `Promise.all()`, 需要每項成功或失敗結果時用 `Promise.allSettled()` 並處理各結果, 不假設 aggregate 的 reject 會取消其他工作
+- 複製資料依 shallow / deep 需求與資料型別選擇; JS / TS 深層複製可評估 `structuredClone()`, 先確認可複製型別與必須保留的 prototype, 參照及 reactive 行為, 不假設所有物件都可複製
+- JS / TS 純文字搜尋可優先評估原生字串方法; 外部輸入需作為 RegExp literal pattern 時, 環境支援可用 `RegExp.escape()`; 若規格明確允許輸入 regex, 保留該語意, 不用未驗證的手寫 escape helper
 - 行為, 型別, side effects, evaluation order 與清楚度等價且版本支援時, 簡單邏輯可使用 ternary, `?.`, `??`, `||`, `&&`, `??=`, `||=`, `&&=`, short-circuit expression 與 `!0`/`!1`, 不限於這些語法
-- 清楚的單一 statement `if` 可省略大括弧 變數, 函式, 型別與其他 Symbol 使用簡短清楚的英文名稱, 不為短而犧牲語意
+- 清楚的單一 statement `if` 可省略大括弧
+- 變數, 函式, 型別與其他 Symbol 使用精簡英文名稱, 不為短而犧牲語意, 沿用專案 Naming
+- 適用語言中可用物件解構建立變數; 保留取值時機, 預設值, `this` binding 與 reactive 行為, 不為解構改變原有語意
+- JS / TS Model 或物件需要說明時, 可用一段物件層級 JSDoc 集中描述用途與欄位, 不必每個欄位分行逐一註解; 保留必要的欄位特殊規則與工具所需 annotation, 不改寫無關既有註解
+- JS / TS 語意簡短清楚且預期回傳 `undefined` 時, 可用 `return void fn()` 或 `() => void fn()`; `(): void => { ... }` 是 TS 回傳型別標註, 不忽略必要的回傳值, `await` 或 Promise rejection 處理
+- Agent 執行格式化時, 優先使用實際可用且已確認的雲端同步 VS Code User Settings, 包含 language-specific formatter 與 options; 未設定項目依 workspace settings, `.editorconfig` 與專案既有規範處理; 不自行替換 formatter 或格式化無關檔案, 既有必要的 lint / CI 檢查仍須遵循
 - 不捏造 API, Option, CLI, 檔案, Symbol, 版本, 功能, 執行結果或驗證結果 涉及效能差異時優先使用 Benchmark, Profiler 或實際結果
 - 編輯規則或設定檔時先確認實際 Syntax, Parser, Version 與既有語意, 採最小範圍變更並使用可用的專用 Validator
 
@@ -59,7 +68,7 @@
 - 未經明確要求, 不執行 commit, push, merge, rebase, force-push, rewrite history 或其他遠端與歷史操作
 - 刪除, 移動, 重新命名或覆寫前確認用途, 引用與影響, 不因整理工作區刪除用途不明的檔案
 - 保留使用者與其他 agent 的既有變更 不修改無關 generated file, lock file, config 或 formatting 結果
-- 專案已有 Git hooks, formatter, linter 或 commit convention 時優先遵循
+- 專案已有 Git hooks, linter 或 commit convention 時優先遵循; formatter 依前述格式化規則處理
 
 ## 規格, UI 與文件
 
