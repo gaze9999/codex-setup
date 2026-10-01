@@ -25,9 +25,9 @@ def run(*args: str, capture: bool = False) -> str:
     return result.stdout.strip() if capture else ""
 
 
-def verify(tag: str) -> list[Path]:
+def verify(tag: str, output_root: Path | None = None) -> list[Path]:
     tag = prepare_release.normalize_version(tag)
-    folder = REPO / "dist" / tag
+    folder = (output_root or REPO / "dist").expanduser().resolve() / tag
     manifest = json.loads((folder / prepare_release.MANIFEST).read_text(encoding="utf-8"))
     if manifest.get("producer") != prepare_release.PRODUCER or manifest.get("tag") != tag:
         raise ValueError("Release manifest has the wrong producer or tag")
@@ -60,7 +60,7 @@ def verify(tag: str) -> list[Path]:
     return [folder / name for name in sorted(expected)]
 
 
-def publish(tag: str) -> None:
+def publish(tag: str, asset_root: Path | None = None) -> None:
     tag = prepare_release.normalize_version(tag)
     if run("git", "status", "--porcelain=v1", "-uall", capture=True):
         raise ValueError("Commit and review all source changes before publishing")
@@ -70,7 +70,8 @@ def publish(tag: str) -> None:
     upstream = run("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}", capture=True)
     if upstream != f"origin/{branch}":
         raise ValueError(f"Branch must track origin/{branch}")
-    assets = verify(tag) + prepare_mcp_release.verify(REPO, tag, REPO / "dist" / "mcp")
+    skill_root = (asset_root or REPO / "dist").expanduser().resolve()
+    assets = verify(tag, skill_root) + prepare_mcp_release.verify(REPO, tag, skill_root / "mcp")
     run(sys.executable, str(REPO / "scripts" / "audit_skills.py"), "--release-tag", tag)
     if run("git", "tag", "--list", tag, capture=True):
         raise ValueError(f"Local tag already exists: {tag}")
@@ -107,24 +108,28 @@ def main() -> int:
     prepare = sub.add_parser("prepare", help="Update versions, build ZIPs, and audit Skills")
     prepare.add_argument("--version", help="Version to use; default increments patch")
     prepare.add_argument("--dry-run", action="store_true")
+    prepare.add_argument("--asset-root", type=Path, help="Asset root; default: <repo>/dist")
     publish_parser = sub.add_parser("publish", help="Push a reviewed commit and create a GitHub Release")
     publish_parser.add_argument("tag", help="Prepared release tag, e.g. v0.5.0")
+    publish_parser.add_argument("--asset-root", type=Path, help="Prepared asset root; default: <repo>/dist")
     args = parser.parse_args()
     try:
         if args.action == "publish":
-            publish(args.tag)
+            publish(args.tag, args.asset_root)
         else:
-            result = prepare_release.prepare(REPO, args.version, REPO / "dist", args.dry_run)
-            mcp_result = prepare_mcp_release.prepare(REPO, result["tag"], REPO / "dist" / "mcp", args.dry_run)
+            asset_root = (args.asset_root or REPO / "dist").expanduser().resolve()
+            result = prepare_release.prepare(REPO, args.version, asset_root, args.dry_run)
+            mcp_result = prepare_mcp_release.prepare(REPO, result["tag"], asset_root / "mcp", args.dry_run)
             if not args.dry_run:
-                verify(result["tag"])
-                prepare_mcp_release.verify(REPO, result["tag"], REPO / "dist" / "mcp")
+                verify(result["tag"], asset_root)
+                prepare_mcp_release.verify(REPO, result["tag"], asset_root / "mcp")
                 run(sys.executable, str(REPO / "scripts" / "audit_skills.py"),
                     "--release-tag", result["tag"])
             print(f"{'PREVIEW' if args.dry_run else 'READY'} {result['tag']}: "
                   f"{result['skills']} Skills, {result['zip_count']} ZIPs, {mcp_result['assets']} MCP wheels")
             if not args.dry_run:
-                print(f"Review changes, commit them, then run: python scripts/release.py publish {result['tag']}")
+                suffix = f" --asset-root {asset_root}" if args.asset_root else ""
+                print(f"Review changes, commit them, then run: python scripts/release.py publish {result['tag']}{suffix}")
     except (OSError, ValueError, AssertionError, zipfile.BadZipFile, json.JSONDecodeError) as error:
         print(f"FAIL {error}", file=sys.stderr)
         return 1

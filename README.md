@@ -172,6 +172,8 @@ python scripts/release.py prepare                 # 或加 --version 0.5.0
 python scripts/release.py publish <tag>
 ```
 
+若 sandbox 與 GitHub CLI 使用不同檔案權限, `prepare` 與 `publish` 可傳入同一個 `--asset-root /absolute/release-assets`; Skill assets 會放在 `<asset-root>/<tag>`, MCP wheel 會放在 `<asset-root>/mcp/<tag>`, 仍執行相同來源與 hash 核對
+
 `prepare` 會執行版本與 Skill ZIP 封裝, 另外以 [prepare_mcp_release.py](./scripts/prepare_mcp_release.py) 在隔離副本建置 Local Documents 與 Workspace Inspection server wheel, 並比對各自 manifest 與目前來源; 不會建立 commit 或上傳 `publish` 要求乾淨的 working tree, 目前分支追蹤 `origin` 同名分支, 且 Tag 尚不存在; 輸入完整 Tag 確認後才推送目前分支並建立 GitHub Release, 上傳全部 Skill ZIP 與 MCP server wheel 已存在的 `tests/` 是驗證程式碼, 保持版控; `.gitignore` 忽略的是 `dist/`, coverage, test results 等執行產物
 
 發布前核對 repository diff 與實際 asset 清單 若變更此 helper, 可執行 focused tests:
