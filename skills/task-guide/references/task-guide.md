@@ -7,7 +7,7 @@ Use this reference when creating or refreshing a reusable guide for one project 
 | Section | Evidence to retain |
 | --- | --- |
 | Title and opening scope | Feature identity, authorized owners and explicit exclusions; guide creation does not authorize implementation |
-| Read by task | Map actual task types to only the relevant files, symbols, pages or sheets; resolve external reference/document roots from the active task or established project layout |
+| Read by task | Start specification tasks with relevant current Markdown extractions; retain original page/sheet pointers and make visual or original checks conditional on concrete gaps, conflicts or requested verification; resolve external roots from the active task or project layout |
 | Source authority | Which original or confirmed decision governs each topic; distinguish original UI/behavior/API evidence from extraction and implementation evidence, retain unresolved conflicts |
 | Work item IDs | Maintained ID registry, project-specific group meanings, allocation rules and preservation of existing identifiers; current item status stays in the registry |
 | Implementation boundaries | Feature-specific safeguards, state ownership, interface/error rules and accepted decisions that change implementation choices; omit inherited generic rules |
@@ -27,7 +27,7 @@ Within a section, put critical framing before the table, present the table, then
 
 ## Generation and integration
 
-1. Read the project and user-identified sources, confirm scope and source identity, and resolve any decision essential to the guide. Missing coverage stays explicit; a schema passing validation does not establish requirements.
+1. Read project evidence and resolve existing Markdown extractions using task/source metadata or pointers, without assuming fixed names, folders or same-stem filenames. Read their relevant sections first. Read screenshots or original sections only when visual evidence, missing/unclear/stale extraction, conflicts or an explicit original-source check requires them; if no usable extraction exists, read the relevant original sections. Keep original authority distinct from reading order and report extraction-only coverage. Confirm scope and resolve any decision essential to the guide. Missing coverage stays explicit; a schema passing validation does not establish requirements.
 2. Assemble a local JSON input using the fields below. [task-guide.example.json](../assets/task-guide.example.json) is a fictional order-query example showing the shape, not rules to adopt. The coding agent prepares this input; the user can request the guide in natural language.
 3. Resolve the bundled generator relative to the installed Skill and preview or create the output. It uses Python 3.10+ standard library only, accepts UTF-8 with or without a BOM and works without the source repository, a network connection, an API Key or MCP.
 

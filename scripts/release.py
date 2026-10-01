@@ -11,6 +11,7 @@ import zipfile
 from pathlib import Path
 
 import prepare_release
+import prepare_mcp_release
 
 
 REPO = Path(__file__).resolve().parents[1]
@@ -69,7 +70,7 @@ def publish(tag: str) -> None:
     upstream = run("git", "rev-parse", "--abbrev-ref", "--symbolic-full-name", "@{upstream}", capture=True)
     if upstream != f"origin/{branch}":
         raise ValueError(f"Branch must track origin/{branch}")
-    assets = verify(tag)
+    assets = verify(tag) + prepare_mcp_release.verify(REPO, tag, REPO / "dist" / "mcp")
     run(sys.executable, str(REPO / "scripts" / "audit_skills.py"), "--release-tag", tag)
     if run("git", "tag", "--list", tag, capture=True):
         raise ValueError(f"Local tag already exists: {tag}")
@@ -114,12 +115,14 @@ def main() -> int:
             publish(args.tag)
         else:
             result = prepare_release.prepare(REPO, args.version, REPO / "dist", args.dry_run)
+            mcp_result = prepare_mcp_release.prepare(REPO, result["tag"], REPO / "dist" / "mcp", args.dry_run)
             if not args.dry_run:
                 verify(result["tag"])
+                prepare_mcp_release.verify(REPO, result["tag"], REPO / "dist" / "mcp")
                 run(sys.executable, str(REPO / "scripts" / "audit_skills.py"),
                     "--release-tag", result["tag"])
             print(f"{'PREVIEW' if args.dry_run else 'READY'} {result['tag']}: "
-                  f"{result['skills']} Skills, {result['zip_count']} ZIPs")
+                  f"{result['skills']} Skills, {result['zip_count']} ZIPs, {mcp_result['assets']} MCP wheels")
             if not args.dry_run:
                 print(f"Review changes, commit them, then run: python scripts/release.py publish {result['tag']}")
     except (OSError, ValueError, AssertionError, zipfile.BadZipFile, json.JSONDecodeError) as error:

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Document Source Matching"
+  short_description: "Match Markdown extracts to their original source files"
+  default_prompt: "Use $document-source-matching to find the current Markdown extract and explain the matching evidence."

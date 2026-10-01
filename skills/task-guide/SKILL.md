@@ -3,7 +3,7 @@ name: task-guide
 description: Create or refresh feature-specific coding task guides from a project's actual instructions, identified sources and confirmed decisions. Use for reusable task rules, stable work-item IDs and concise history snapshots with source authority and verification boundaries; not agent role assignment, ordinary summaries or implementation work.
 metadata:
   short-description: Create portable feature-specific coding task guides
-  version: "v0.4.5"
+  version: "v0.4.6"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---
@@ -16,6 +16,7 @@ Create a concise, conditionally loaded guide for a feature, transaction or workf
 
 - Inspect the target project's applicable instructions, Git status/diff when available, relevant configuration, current owners and identified source documents. Determine the real stack and naming rather than copying an example project's rules.
 - Resolve the requested feature and destination from the task. Ask only when a missing source, ownership or decision prevents a correct guide; keep independent coverage usable and unresolved behavior explicit.
+- Locate existing Markdown extractions from the task and available source/version metadata or pointers, without requiring fixed filenames, same-stem names or a fixed folder; resolve new or renamed extractions the same way. Start specification reading and generated task navigation with their relevant sections. Route to screenshots or originals only for needed visual evidence, missing/unclear/stale extraction, conflicting evidence or an explicit original-source check; use relevant original sections when no usable extraction exists. Keep source/version and page/sheet pointers, without requiring unrequested extraction or routine original rereading
 - Distinguish original specifications, explicit user decisions, navigation/extraction aids and current implementation evidence. Assign source authority by topic; do not invent one overall latest-source order or promote a missing field, example or existing behavior into a requirement.
 - Preserve actual authorization and module/interface boundaries. Creating a guide does not authorize application changes, source regeneration, delegation, publication or external data transfer.
 
@@ -52,6 +53,6 @@ Create a concise, conditionally loaded guide for a feature, transaction or workf
 
 ## Verify and deliver
 
-- Check source locations and cited sections, retained decisions, unresolved gates, applicable boundaries and any conditional loading pointer against the actual target project. Structural generation alone does not prove semantic correctness or runtime loading.
+- Check the Markdown-first routes and conditional original-source triggers, source locations and cited sections, retained decisions, unresolved gates, applicable boundaries and any conditional loading pointer against the actual target project. Report extraction-based coverage separately from inspected originals. Structural generation alone does not prove semantic correctness or runtime loading.
 - Review the final diff or direct readback for ignored files. Do not advance application progress, claim application tests passed or add history entries solely because a task guide was created.
 - Deliver the guide location, source coverage, actual checks and material unresolved items. When this Skill itself is updated, keep repository source and any requested installed mirror consistent.

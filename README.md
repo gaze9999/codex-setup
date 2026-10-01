@@ -25,6 +25,7 @@
 | 文件 | [Doc Updater](./skills/doc-updater/SKILL.md) | 實作後依 verified diff 同步必要的 docs, memo, changelog 或 API reference |
 | 文件 | [Document Production](./skills/document-production/SKILL.md) | 產生可交付的 PDF, DOCX 或 Markdown 正式文件 |
 | 文件 | [README Maintainer](./skills/readme-maintainer/SKILL.md) | 依 repository 證據建立或大幅重整 README |
+| 文件 | [License Maintainer](./skills/license-maintainer/SKILL.md) | 依授權與 ownership 證據維護 LICENSE, NOTICE, COPYRIGHT, SPDX 與 README 授權連結 |
 | Rules 與 Filter | [Filter Rule Maintenance](./skills/filter-rule-maintenance/SKILL.md) | 維護 AdGuard, uBlock Origin, DNS, hosts 與相似 filter/rewrite rules |
 
 ## 分層原則
@@ -62,6 +63,20 @@ python scripts/install_global_agents.py --install
 5. 重新載入支援 Skill discovery 的用戶端
 
 不要直接在本機安裝鏡像做永久修改 若需要變更, 先改 repository, 驗證後再單向同步
+
+### 本機 MCP
+
+本 repo 提供 `local_documents`, 唯讀 `workspace_inspection` 與 Jev 的統一安裝入口, 預設只預覽, 加上 `--apply` 才安裝或註冊:
+
+```text
+python scripts/install_mcp.py jev
+python scripts/install_mcp.py local_documents --python /absolute/document-runtime/bin/python --read-root /absolute/project
+python scripts/install_mcp.py workspace_inspection --python /absolute/workspace-runtime/bin/python --read-root /absolute/workspaces
+```
+
+Local Documents 與 Workspace Inspection 的 MCP adapter 維護於本 repo, 分別使用 `my-py-document-core` 與 `my-py-workspace-core` wheel, 不依賴任一 repo 路徑; Jev 維持於本 repo 的 Skill, installer 可指定安裝位置; 各環境獨立, 不放入 repo, 也不預設讀寫範圍
+
+首次建立 runtime, 註冊, 備份與驗證方式見 [本機 MCP 安裝](./docs/mcp.md); 日常使用見 [Local Documents 操作教學](./docs/local-documents-usage.md) 與 [Jev 操作教學](./docs/jev-usage.md); 獨立 Jev Skill ZIP 的原有 installer 繼續可用
 
 ## Repository 驗證
 
@@ -157,7 +172,7 @@ python scripts/release.py prepare                 # 或加 --version 0.5.0
 python scripts/release.py publish <tag>
 ```
 
-`prepare` 會執行版本與 ZIP 封裝, 比對 manifest / ZIP 與目前 Skill 原始檔, 再執行 Skill audit; 不會建立 commit 或上傳 `publish` 要求乾淨的 working tree, 目前分支追蹤 `origin` 同名分支, 且 Tag 尚不存在; 輸入完整 Tag 確認後才推送目前分支並建立 GitHub Release, 上傳全部 ZIP 已存在的 `tests/` 是驗證程式碼, 保持版控; `.gitignore` 忽略的是 `dist/`, coverage, test results 等執行產物
+`prepare` 會執行版本與 Skill ZIP 封裝, 另外以 [prepare_mcp_release.py](./scripts/prepare_mcp_release.py) 在隔離副本建置 Local Documents 與 Workspace Inspection server wheel, 並比對各自 manifest 與目前來源; 不會建立 commit 或上傳 `publish` 要求乾淨的 working tree, 目前分支追蹤 `origin` 同名分支, 且 Tag 尚不存在; 輸入完整 Tag 確認後才推送目前分支並建立 GitHub Release, 上傳全部 Skill ZIP 與 MCP server wheel 已存在的 `tests/` 是驗證程式碼, 保持版控; `.gitignore` 忽略的是 `dist/`, coverage, test results 等執行產物
 
 發布前核對 repository diff 與實際 asset 清單 若變更此 helper, 可執行 focused tests:
 

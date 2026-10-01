@@ -9,12 +9,12 @@
     "規格與文件路徑以 project root 為基準; 若來源移到外部資料夾, 由目前 task 指定其 root"
   ],
   "read_by_task": [
-    {"need": "欄位, 查詢與錯誤處理", "evidence": "先看 specs/order-search.md 的相關章節, 再核對 src/orders/ 的 owner 與呼叫端"},
-    {"need": "API mapping", "evidence": "核對 specs/order-api.yaml 的對應 operation 與目前 client; 未定欄位僅阻擋相依行為"},
+    {"need": "欄位, 查詢與錯誤處理", "evidence": "依目前任務與來源資訊找到對應查詢規格的 Markdown 抽出版, 不限定檔名, 先讀相關章節, 再核對 src/orders/ 的 owner 與呼叫端; 缺漏, 不明確, 過期, 衝突或明確要求核對原始來源時才回查原規格, 畫面配置需要時才看截圖"},
+    {"need": "API mapping", "evidence": "依來源資訊找到對應目前 API 規格的 Markdown 抽出版, 不限定檔名, 先讀相關 operation 與目前 client; 缺漏, 不明確, 過期, 衝突或明確核對原始來源時才看原規格; 未定欄位僅阻擋相依行為"},
     {"need": "接續工作", "evidence": "docs/orders-progress.md 保留目前決策與待辦; 需要先前證據時才讀 docs/orders-history.md"}
   ],
   "source_authority": [
-    "查詢欄位與互動以 specs/order-search.md 為依據; API 名稱, 型別與錯誤格式以 specs/order-api.yaml 為依據",
+    "查詢欄位與互動以專案指定的原始查詢規格為依據; API 名稱, 型別與錯誤格式以原始 API 規格為依據; 依來源資訊找到相符的 Markdown 抽出版作為優先閱讀入口, 不要求同名或固定資料夾, 不改變原始來源判定權",
     "明確使用者決策保留於 docs/orders-progress.md 並指出影響項目; 索引與現有程式碼不能自行建立新規格"
   ],
   "work_item_ids": {

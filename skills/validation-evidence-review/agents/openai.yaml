@@ -1,0 +1,4 @@
+interface:
+  display_name: "Validation Evidence Review"
+  short_description: "Review recorded checks, baselines, and missing coverage"
+  default_prompt: "Use $validation-evidence-review to summarize the available validation evidence and identify remaining gaps."

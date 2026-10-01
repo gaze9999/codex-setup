@@ -3,7 +3,7 @@ name: jev-evaluation
 description: Rank retrieved context candidates or evaluate bounded semantic choices with TypeSafe Jev when a shortlist needs comparison. Use for Jev setup or diagnosis too, not as a preflight for ordinary coding.
 metadata:
   short-description: Optional candidate ranking and typed semantic evaluation
-  version: "v0.4.5"
+  version: "v0.4.6"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---

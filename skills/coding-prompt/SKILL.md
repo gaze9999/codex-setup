@@ -3,7 +3,7 @@ name: coding-prompt
 description: Create a concise cross-project coding-agent prompt and model recommendation only when the user explicitly asks for a prompt or handoff; do not use for direct implementation requests.
 metadata:
   short-description: Concise cross-project coding prompt
-  version: "v0.4.5"
+  version: "v0.4.6"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---
@@ -22,6 +22,8 @@ Create a minimal handoff-ready prompt when the requested deliverable is the prom
 - Include only the information needed to perform this task: the objective, task-specific scope, confirmed contracts, essential source pointers, explicit prohibitions, and observable completion criteria
 - Prefer positive gates that state what to implement, preserve, verify, or deliver. Use negative wording only for files, modules, behaviors, external systems, or actions that must not be touched
 - Mention a document as required reading only when the task actually depends on it. Do not add broad repository, specification, history, or instruction-reading checklists
+- For specification-based prompts, locate an existing Markdown extraction using the task and available source/version metadata or pointers, without requiring fixed filenames, same-stem names or a fixed folder; point first to its relevant sections. Make screenshot or original-source lookup conditional on needed visual evidence, missing/unclear/stale extraction, conflicting evidence, or an explicit original-source check; do not make rereading PDF/XLSX a routine prerequisite. If no usable extraction exists, point to the relevant original sections without requiring unrequested extraction work
+- Keep original specifications and confirmed decisions authoritative, retain source/version and page/sheet pointers where available, and distinguish extraction-based evidence from a verified original. State only task-specific fallback conditions; do not copy a generic source-reading checklist into every prompt
 - Omit routine repository discovery, Git operations, generic coding/style/safety rules, standard verification checklists, and reminders to follow project instructions. The destination agent and project instruction layers provide them
 - Keep task-specific exceptions, exact contract values or messages, required compatibility boundaries, known concurrent-work constraints, and explicit stop conditions when they materially affect execution
 - For refactor prompts, carry forward explicit user decisions about equivalent syntax, inferred return types and explicit void/public annotations, responsibility-based variable/member ordering, helper depth/readability, type-file cohesion and state ownership only when they change this task. Do not turn them into blanket extraction, inlining or migration requirements; keep review candidates distinct from authorized implementation

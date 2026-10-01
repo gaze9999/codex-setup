@@ -3,7 +3,7 @@ name: document-production
 description: Create finished document artifacts from user requirements and source material; default to PDF when no format is specified.
 metadata:
   short-description: Default-PDF document production pipeline with DOCX and Markdown support
-  version: "v0.4.5"
+  version: "v0.4.6"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---

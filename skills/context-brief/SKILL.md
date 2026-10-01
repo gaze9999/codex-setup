@@ -3,7 +3,7 @@ name: context-brief
 description: Convert explicitly provided implementation-contract material into reusable Codex Markdown context briefs; do not use for ordinary summaries or one-off coding tasks.
 metadata:
   short-description: Create concise, traceable coding context briefs
-  version: "v0.4.5"
+  version: "v0.4.6"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---
@@ -33,6 +33,7 @@ Use the appropriate workflow instead for generic document conversion, ordinary s
 ## Workflow
 
 - Resolve source boundaries, intended use, and deliverable from the request and available material. Ask only when a gap affects correctness or coverage.
+- Locate an existing Markdown extraction from the task and available source/version metadata or pointers, without requiring fixed filenames, same-stem names or a fixed folder; start from its relevant sections. Preserve its original-source identity, locations and coverage; consult only necessary screenshots or original sections for visual evidence, missing/unclear/stale extraction, conflicts, or an explicit original-source check. A usable extraction does not require routine original-file rereading or regeneration.
 - Preserve names, paths, fields, enums, status codes, validation, security and permissions, errors, constraints, examples, and acceptance criteria.
 - Compress marketing copy, repeated background, and implementation-irrelevant narrative. Do not turn gaps, conflicts, OCR text, historical progress, or current implementation behavior into confirmed contracts. Treat them as evidence unless a governing source or explicit user decision establishes the contract.
 - Retaining secrets, credentials, private tokens, or unnecessary personal data requires an explicit user request and implementation need. Preserve only the minimum source detail required for implementation.
@@ -40,9 +41,10 @@ Use the appropriate workflow instead for generic document conversion, ordinary s
 
 ## On-demand tools
 
-- For PDF, DOCX, XLSX, or other structured files, prefer the available native document capability. When a compatible Python runtime is available, the bundled `scripts/extract_source_text.py <source-file>` may be resolved relative to this Skill and used as a compact extraction helper. Use an equivalent available extractor when needed; do not require every environment to install the optional dependencies.
+- When no usable Markdown extraction exists or a conditional source check is needed, read the relevant original sections. For PDF, DOCX, XLSX, or other structured files, prefer the available native document capability. When a compatible Python runtime is available, the bundled `scripts/extract_source_text.py <source-file>` may be resolved relative to this Skill and used as a compact extraction helper. Use an equivalent available extractor when needed; do not require every environment to install the optional dependencies.
 - Use OCR only when native extraction cannot recover scanned content or essential images. If no safe extraction path is available, mark only the affected coverage as unverified rather than blocking independent sections.
 - Mark coverage as `partial` or `unverified` when OCR, tables, or extraction are insufficient, and retain source locations.
+- Original specifications and confirmed decisions retain authority. Identify evidence read only through an extraction; structural validation does not mean the original was inspected. Do not silently re-extract sources or expand a requested brief refresh into source maintenance.
 - When a compatible Python runtime is available, run the Skill-relative `scripts/validate_context_brief.py <brief.md>` after creating the brief; use `--json` when machine-readable output is needed. Otherwise perform equivalent structural checks and report the bundled validator as not run.
 
 ## Output contract

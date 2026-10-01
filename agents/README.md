@@ -17,9 +17,15 @@
 
 Global 指示保留使用者確認的等價短寫風格, 回傳型別推斷/void 與 public 標註, 變數及方法的責任/流程排序, 大型物件中文 JSDoc, helper 呼叫層次, 型別分檔與狀態責任原則. 判斷依據是語意, 可讀性與修改成本, 不以最少字數, Component 行數或固定 helper 層數為目標
 
-建立或拆出 helper 須提供明確責任或共用規則; 內聯不得造成難讀或冗長. 型別按功能與 consumer 分組, 比較拆檔後的查找成本. Component 保留畫面私有操作, Service/store 管理適合共用的狀態與 API, 純邏輯使用 rules/mapper/projection; 語法偏好不取代型別與 runtime 支援檢查
+建立或拆出 helper 須提供明確責任或共用規則; 直接展開至呼叫端不得造成難讀或冗長. 型別按功能與 使用端 分組, 比較拆檔後的查找成本. Component 保留畫面私有操作, Service/store 管理適合共用的狀態與 API, 純邏輯使用 rules/mapper/projection; 語法偏好不取代型別與 runtime 支援檢查
 
 [agent-governance](../skills/agent-governance/SKILL.md) 保留分層決策, [component-member-order](../skills/component-member-order/SKILL.md) 維持排序與重構授權邊界, [coding-prompt](../skills/coding-prompt/SKILL.md) 只在相關任務傳遞明確取捨. 具體功能與待辦留在專案文件, 不複製到可攜 Skill
+
+## 規格閱讀順序
+
+Coding prompt 與規格參考先依目前任務與來源資訊找出相符的 Markdown 抽出版, 不限定檔名或資料夾; 畫面證據, 缺漏, 不明確, 過期, 衝突或明確的原始來源核對才回查必要的截圖與原始檔. 原始規格及已確認決策保留判定權, 抽出或重新產生文件仍需符合當次授權
+
+[coding-prompt](../skills/coding-prompt/SKILL.md) 傳遞這個閱讀順序, [context-brief](../skills/context-brief/SKILL.md) 保留抽出來源與證據邊界, [task-guide](../skills/task-guide/SKILL.md) 維護各功能的具體導覽與回查條件
 
 ## 跨電腦同步
 
@@ -33,7 +39,7 @@ Skills 仍從 repository 的 `skills/` 目錄獨立安裝, 依根目錄 [README]
 
 安裝 script 只複製這兩個公開檔案, 不覆寫既有 `config.toml`, secrets, permissions 或 MCP 設定 CLI 可用 `codex --profile subagents`; Desktop / IDE 若要作為一般預設, 將 profile 的 `agents.default_subagent_model` 合併到本機 `config.toml` 對應位置, 保留其他設定 專案與當次明確選擇仍可能優先; 不把 profile 安裝完成描述為現有 task 已切換 model
 
-Project role 檔若需要依 slice 選擇 Sol 或 Luna, 應保持 model/effort 未固定; 職責穩定且範圍明確的角色可依[官方 subagent 文件](https://learn.chatgpt.com/docs/agent-configuration/subagents)與可驗證結果固定 model; Main 的直接實作能力與最終驗收責任保留, 獨立 reviewer 依風險使用
+Project role 檔若需要依 修改範圍 選擇 Sol 或 Luna, 應保持 model/effort 未固定; 職責穩定且範圍明確的角色可依[官方 subagent 文件](https://learn.chatgpt.com/docs/agent-configuration/subagents)與可驗證結果固定 model; Main 的直接實作能力與最終驗收責任保留, 獨立 reviewer 依風險使用
 
 Codex 先依 explicit spawn, `[agents]` defaults 與 parent 解析設定, 再套用 custom role; role 的 model/effort pin 優先; explicit spawn 或 `[agents]` default 選定 model 且都未指定 effort 時, 使用該 model 的預設 effort; 兩者都未指定 model/effort 時才繼承 parent; role 只固定 model 時保留此前解析的 effort, 必須確認支援; 需要改用另一個 tier 時, 使用相同 ownership 與權限限制的 unpinned role; 不把顯示名稱, model 自述或 TOML 解析成功當成 runtime reload 證據
 
