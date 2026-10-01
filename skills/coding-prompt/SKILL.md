@@ -3,7 +3,7 @@ name: coding-prompt
 description: Create a concise cross-project coding-agent prompt and model recommendation only when the user explicitly asks for a prompt or handoff; do not use for direct implementation requests.
 metadata:
   short-description: Concise cross-project coding prompt
-  version: "v0.4.4"
+  version: "v0.4.5"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---
@@ -24,6 +24,7 @@ Create a minimal handoff-ready prompt when the requested deliverable is the prom
 - Mention a document as required reading only when the task actually depends on it. Do not add broad repository, specification, history, or instruction-reading checklists
 - Omit routine repository discovery, Git operations, generic coding/style/safety rules, standard verification checklists, and reminders to follow project instructions. The destination agent and project instruction layers provide them
 - Keep task-specific exceptions, exact contract values or messages, required compatibility boundaries, known concurrent-work constraints, and explicit stop conditions when they materially affect execution
+- For refactor prompts, carry forward explicit user decisions about equivalent syntax, inferred return types and explicit void/public annotations, responsibility-based variable/member ordering, helper depth/readability, type-file cohesion and state ownership only when they change this task. Do not turn them into blanket extraction, inlining or migration requirements; keep review candidates distinct from authorized implementation
 - Preserve the requested authority boundary. Do not turn a review, diagnosis, or plan into implementation, or add external actions the user did not authorize
 - Do not invent paths, APIs, versions, commands, mappings, requirements, or completed results. Keep unresolved decisions explicit and block only dependent work
 - Consolidate repetition and omit background or rationale that does not change an implementation decision

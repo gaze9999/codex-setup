@@ -28,15 +28,23 @@
 - 非同步工作依相依關係與失敗需求選擇依序或並行; JS / TS 全部成功才繼續時用 `Promise.all()`, 需要每項成功或失敗結果時用 `Promise.allSettled()` 並處理各結果, 不假設 aggregate 的 reject 會取消其他工作
 - 複製資料依 shallow / deep 需求與資料型別選擇; JS / TS 深層複製可評估 `structuredClone()`, 先確認可複製型別與必須保留的 prototype, 參照及 reactive 行為, 不假設所有物件都可複製
 - JS / TS 純文字搜尋可優先評估原生字串方法; 外部輸入需作為 RegExp literal pattern 時, 環境支援可用 `RegExp.escape()`; 若規格明確允許輸入 regex, 保留該語意, 不用未驗證的手寫 escape helper
-- 行為, 型別, side effects, evaluation order 與清楚度等價且版本支援時, 簡單邏輯可使用 ternary, `?.`, `??`, `||`, `&&`, `??=`, `||=`, `&&=`, short-circuit expression 與 `!0`/`!1`, 不限於這些語法
+- 保留既有等價短寫風格; 行為, 型別, side effects, evaluation order 與可讀性等價且版本支援時, 可使用 ternary, `?.`, `??`, `||`, `&&`, `??=`, `||=`, `&&=`, short-circuit expression, `!0`/`!1` 與值運算式的 `void 0` (取代 `undefined`), 不限於這些語法. `void 0` 替換須確認運算子優先序及 `undefined` 未被區域宣告遮蔽, 不替換型別語法, 字串或欄位名稱; 不因一般 Clean Code 風格偏好改回長寫, 也不為縮短字元犧牲語意或可讀性
 - 清楚的單一 statement `if` 可省略大括弧
 - 變數, 函式, 型別與其他 Symbol 使用精簡英文名稱, 不為短而犧牲語意, 沿用專案 Naming
 - 適用語言中可用物件解構建立變數; 保留取值時機, 預設值, `this` binding 與 reactive 行為, 不為解構改變原有語意
-- JS / TS Model 或物件需要說明時, 可用一段物件層級 JSDoc 集中描述用途與欄位, 不必每個欄位分行逐一註解; 保留必要的欄位特殊規則與工具所需 annotation, 不改寫無關既有註解
-- JS / TS 語意簡短清楚且預期回傳 `undefined` 時, 可用 `return void fn()` 或 `() => void fn()`; `(): void => { ... }` 是 TS 回傳型別標註, 不忽略必要的回傳值, `await` 或 Promise rejection 處理
+- JS / TS 大型 Model 或物件以精簡中文 JSDoc 集中說明用途與各欄位的業務意義, 補充必要的單位, 空值, 省略/清空與來源規則; 可一段涵蓋多欄, 巢狀欄位留在所屬型別說明, 避免重複維護或只翻譯名稱; 保留工具所需 annotation, 不改寫無關既有註解
+- TypeScript 函式, 方法與箭頭函式的回傳值能清楚且穩定推斷時, 可省略回傳型別; 公開介面, overload 或必要型別邊界仍保留明確約束. 不回傳有效值的同步函式明確標註 `: void`; 對應的 async 函式使用 `Promise<void>`, 不把 Promise 或必要回傳值改成 void; 僅套用於合法的型別標註位置, 不在純 JS, constructor 或 setter 加不合法的回傳標註
+- TypeScript class 的公開屬性, 方法與 accessor 明確標註 `public`, 包含合法位置的公開 constructor 與 parameter property; 保留既有 `private`, `protected` 與 `#private` 邊界, 不為補標註擴大可見性; interface/type 成員, 純 JS 與其他不合法位置不加 access modifier
+- 變數與方法依責任及功能流程排序, 不按字母或只按可見性分組; class 先常數與對外輸入/輸出, 畫面參照, 公開狀態/表單與 accessor, 注入相依與內部狀態, constructor/lifecycle, 再依流程排列事件入口與操作, 單一流程的私有 helper 緊鄰, 跨流程 helper 置後; 成對 accessor 與 overload 相鄰, 區域變數靠近首次使用並依相依順序宣告, 保留 initializer, decorator, side effects 與 reactive 時序; Angular 詳細排序按 component-member-order Skill, 其他 class 依實際責任套用, 不硬套 Angular 成員
+- JS / TS 語意簡短清楚且預期回傳 `undefined` 時, 可用 `return void fn()`; TS 箭頭函式可用 `(): void => void fn()`, JS 使用 `() => void fn()`; `(): void => { ... }` 是 TS 回傳型別標註, 不忽略必要的回傳值, `await` 或 Promise rejection 處理
 - Agent 執行格式化時, 優先使用實際可用且已確認的雲端同步 VS Code User Settings, 包含 language-specific formatter 與 options; 未設定項目依 workspace settings, `.editorconfig` 與專案既有規範處理; 不自行替換 formatter 或格式化無關檔案, 既有必要的 lint / CI 檢查仍須遵循
 - 不捏造 API, Option, CLI, 檔案, Symbol, 版本, 功能, 執行結果或驗證結果 涉及效能差異時優先使用 Benchmark, Profiler 或實際結果
 - 編輯規則或設定檔時先確認實際 Syntax, Parser, Version 與既有語意, 採最小範圍變更並使用可用的專用 Validator
+
+- 可維護性檢查沿實際呼叫鏈辨識同次操作的重複驗證/轉換/投影, 未使用的回傳計算, 中間物件/陣列與重複同步/重算; 已確認等價且在授權範圍內時精簡. 呼叫次數多或檔案長本身不是缺陷; 保留外部資料邊界驗證, 保存欄位白名單, 錯誤與空值語意, mutation/參照及 reactive 時序, 不用型別斷言代替驗證或為局部簡化新增通用框架
+- 建立, 拆出或內聯 helper 前檢查完整呼叫鏈, 抽象層次與跨檔跳轉成本; helper 應增加明確業務意義, 共用規則或必要驗證邊界, 不只轉手或重驗已確認資料. 純轉手可內聯, 前提是不造成閱讀困難, 過度冗長或重複; 有意義的 helper 保留, 不訂固定層數或行數上限, 不為減少 Component 行數增加包裝層
+- 型別與檔案按功能責任及實際 consumer 分組; 跨檔共用型別放所屬功能 model, 大型表單型別可置於相鄰型別檔, 小型私有型別留近使用處. 分拆前比較責任清晰度, 修改連動與查找成本, 避免一型別一檔, 全域 types 大雜燴或循環相依; 純型別依目前工具鏈使用 import type
+- Component 保留畫面協調, 表單控制項, 私有互動與 DOM/lifecycle 邏輯; 共享狀態, API 與請求生命週期依既有架構由功能 Service/store 管理, 純判斷與資料轉換放 rules/mapper/projection. 狀態維持單一擁有者, 衍生旗標優先由原始狀態推導; 共用不代表全部移入 Service, 不以大型 Service 取代大型 Component, 搬移前保留 provider scope, state lifetime 與 reactive 時序
 
 ## AI, Model 與外部服務
 
@@ -44,6 +52,7 @@
 - 不假設不同 Model, Provider, API 或版本能力與參數相同 修改 Prompt, Workflow, Model Parameter 或 Tool Calling 前先閱讀既有實作
 - Secret, Token, API Key, Credential 與 Webhook Secret 不寫死於 Source Code, Log, Commit 或前端可取得的位置
 - 非 deterministic 輸出需要可靠結果時使用 Validation, Retry, Fallback 或 Evaluation 詳細 Agent, RAG, ComfyUI 等流程由適用的 Skill 按任務載入
+- 候選 context 需要語意排序或有限分類時, 可按需使用 jev-evaluation Skill; 必讀規格, 已確認決策, 授權與驗證要求仍由 Main 保留, API 接入與失敗處理僅在需要時載入 Skill
 
 ## Delegation 與 model selection
 

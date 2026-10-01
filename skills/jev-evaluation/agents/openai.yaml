@@ -1,0 +1,4 @@
+interface:
+  display_name: "Jev Evaluation"
+  short_description: "Rank context candidates with optional Jev evaluation"
+  default_prompt: "Use $jev-evaluation for a bounded semantic comparison when useful, preserve mandatory context and source pointers, and keep implementation and acceptance with Main."

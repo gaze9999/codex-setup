@@ -3,7 +3,7 @@ name: agent-governance
 description: Create, audit, or simplify project AGENTS.md layers and Codex subagent roles. Use for agent-governance work, including a new project setup, not ordinary implementation or general code review.
 metadata:
   short-description: Agent governance, role boundaries, and instruction minimization
-  version: "v0.4.4"
+  version: "v0.4.5"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---
@@ -49,6 +49,12 @@ Keep the smallest instruction set that preserves authorization, contracts, proje
 - Prefer repository tooling, tests, linters, or CI for mechanically enforceable behavior. Do not add dependencies merely to reorganize instructions.
 - Before retiring a guide or role, map all live references and unique rules. Move surviving content first, then verify dead links and callers; historical mentions may remain when they are not live instructions.
 - Preserve explicit user choices and safety boundaries. Never claim that a shorter file improves quality, cost, or runtime behavior without measured evidence.
+
+## Preserve maintainability decisions
+
+- Keep explicit equivalent-syntax, return-type, explicit-public and responsibility-based member-order preferences at the user/global layer; do not replace them with a generic Clean Code style. Preserve equivalent behavior, clear reading and applicable tooling support
+- When recording extraction or inlining rules, judge the full helper call chain, meaningful abstraction boundaries and navigation cost. Avoid pass-through layers, but do not inline into hard-to-read or overly long callers; do not invent fixed function-length or layer-count limits
+- Place type/file cohesion and single-state-owner principles at their durable layer. Keep framework-specific Component/Service placement in applicable project guidance, and record concrete refactor candidates as task work items rather than implementation authorization
 
 ## Load detailed guidance only when needed
 

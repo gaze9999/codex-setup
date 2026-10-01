@@ -13,6 +13,14 @@
 
 新專案的 root, nested, subagent 與 task 範本收在 [agent-governance project starter](../skills/agent-governance/assets/project-starter/README.md) 使用時先依專案實際內容改寫, 不把範本當成已啟用的指示 Skill ZIP 也包含這些範本, 可在另一台電腦獨立使用
 
+## 可維護性與風格決策
+
+Global 指示保留使用者確認的等價短寫風格, 回傳型別推斷/void 與 public 標註, 變數及方法的責任/流程排序, 大型物件中文 JSDoc, helper 呼叫層次, 型別分檔與狀態責任原則. 判斷依據是語意, 可讀性與修改成本, 不以最少字數, Component 行數或固定 helper 層數為目標
+
+建立或拆出 helper 須提供明確責任或共用規則; 內聯不得造成難讀或冗長. 型別按功能與 consumer 分組, 比較拆檔後的查找成本. Component 保留畫面私有操作, Service/store 管理適合共用的狀態與 API, 純邏輯使用 rules/mapper/projection; 語法偏好不取代型別與 runtime 支援檢查
+
+[agent-governance](../skills/agent-governance/SKILL.md) 保留分層決策, [component-member-order](../skills/component-member-order/SKILL.md) 維持排序與重構授權邊界, [coding-prompt](../skills/coding-prompt/SKILL.md) 只在相關任務傳遞明確取捨. 具體功能與待辦留在專案文件, 不複製到可攜 Skill
+
 ## 跨電腦同步
 
 先修改本 repository 的 `agents/AGENTS.md` 與相關 profile 檔, 審查 diff 與公開內容, 再以 `python scripts/install_global_agents.py --install` 單向安裝 不帶參數時比對 `AGENTS.md` 與 `subagents.config.toml`; 已安裝版本不同時預設整批拒絕寫入, 可先人工合併, 或明確加上 `--replace` 並保留自動備份

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Guide"
+  short_description: "Create task guides, stable IDs and concise history records"
+  default_prompt: "Use $task-guide to inspect this project and its sources, then create a concise Chinese task guide with stable work-item IDs, headings ordered by importance and applicable minute-precision history records."

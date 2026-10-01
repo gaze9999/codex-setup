@@ -3,7 +3,7 @@ name: component-member-order
 description: Organize Angular component class members by responsibility and feature flow while preserving decorators, comments, initialization behavior, and public interfaces. Use when reordering or standardizing members in one or more .component.ts files, optionally migrating decorator inputs and outputs to signal APIs when explicitly requested, or when generating a scoped handoff prompt for that work.
 metadata:
   short-description: Safe Angular component member ordering
-  version: "v0.4.4"
+  version: "v0.4.5"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---
@@ -41,6 +41,8 @@ Use this top-level order when the corresponding members exist:
 
 Keep paired getters/setters and overloads adjacent. Order lifecycle hooks by Angular execution order: `ngOnChanges`, `ngOnInit`, `ngDoCheck`, `ngAfterContentInit`, `ngAfterContentChecked`, `ngAfterViewInit`, `ngAfterViewChecked`, then `ngOnDestroy`.
 
+Make implicit public visibility explicit with `public` on TypeScript class properties, methods, accessors and public constructors when applying the user-requested visibility normalization. Preserve private/protected/#private boundaries; never add access modifiers to interfaces or invalid syntax positions. This explicit normalization is the only access-modifier exception below. Keep local variables near first use and in dependency order; do not reorder side effects.
+
 ## Group methods by feature flow
 
 Do not sort methods alphabetically.
@@ -54,13 +56,19 @@ Do not sort methods alphabetically.
 
 Examples of possible feature groups include query, create case, detail, note, timeline, export, and approval. These are examples, not required headings.
 
+## Keep ownership and reading context
+
+For ordering-only work, keep existing files, helper bodies, return types and state owners. Do not turn member ordering into type extraction or Component-to-Service migration. When separately authorized work includes those changes, keep view coordination, form controls and private UI behavior with the Component; assign shared state/API lifecycles to the existing feature Service/store and pure rules or projections to plain functions. Preserve one state owner, provider scope and lifecycle timing.
+
+Before extracting or inlining a helper, assess the complete call chain and the reading cost of another layer. Extract meaningful shared rules or boundaries, not pass-through steps; inline only when the caller remains clear and reasonably sized. Keep small private types near use and split larger/shared types by feature only when cohesion outweighs navigation cost. Preserve explicit equivalent-syntax and inferred-return/void-annotation preferences when changing logic is authorized; preserve existing JSDoc unless its editing is in scope.
+
 ## Preserve behavior and comments
 
 Class field initializers execute in declaration order. Trace initializer references before moving fields and preserve any required dependency order. If the preferred order would change runtime behavior, keep the safe order and report the exception.
 
 - Move a member together with its decorators, existing JSDoc, and directly associated comments
 - Do not rewrite, remove, merge, or reposition existing JSDoc and comments relative to their member
-- Do not change names, types, access modifiers, initial values, parameters, return types, or method bodies
+- Do not change names, types, effective visibility, initial values, parameters, return types, or method bodies; only add explicit `public` when visibility normalization is requested
 - Do not add pass-through helpers or unrelated refactors
 - Preserve public interfaces, template bindings, Angular lifecycle behavior, and reactive state ownership
 

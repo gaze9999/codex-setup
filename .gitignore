@@ -49,6 +49,14 @@ venv/
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+.nox/
+.hypothesis/
+test-results/
+junit.xml
 
 # Archives / temporary release packages
 *.zip

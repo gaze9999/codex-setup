@@ -11,9 +11,11 @@
 | 類別 | Skill | 用途 |
 |---|---|---|
 | Agent 與 context | [Agent Governance](./skills/agent-governance/SKILL.md) | 重整 global, root, nested `AGENTS.md`, tool-specific routing 與 subagent 職責 |
+| Agent 與 context | [Task Guide](./skills/task-guide/SKILL.md) | 依實際專案與來源建立功能 / 交易的條件式任務指引, 含跨平台 Markdown 產生器 |
 | Agent 與 context | [Task Routing](./skills/task-routing/SKILL.md) | 判斷直接執行, 新 task, fork 與 subagent, 並整理必要交接資訊 |
 | Agent 與 context | [Coding Prompt](./skills/coding-prompt/SKILL.md) | 僅在明確要求 prompt 或 handoff 時產生可執行的 coding prompt 與當下 model 建議 |
 | Agent 與 context | [Context Brief](./skills/context-brief/SKILL.md) | 將已指定規格, API, schema 或整合文件整理成可重用 implementation contract |
+| Agent 與 context | [Jev Evaluation](./skills/jev-evaluation/SKILL.md) | 按需排序候選 context 或進行有限語意分類, 提供 Windows / macOS 共用 MCP 與 CLI |
 | AI 與媒體 | [AI Application Engineering](./skills/ai-application-engineering/SKILL.md) | 實作或診斷 LLM, Agent, Tool Calling, RAG, Embedding 與 model runtime |
 | AI 與媒體 | [ComfyUI Workflow](./skills/comfyui-workflow/SKILL.md) | 維護可重現的 Stable Diffusion / ComfyUI graph, model 與硬體設定 |
 | AI 與媒體 | [Editorial Illustration](./skills/editorial-illustration/SKILL.md) | 依固定 editorial illustration 視覺方向處理使用者提供的圖片 |
@@ -145,6 +147,17 @@ dist/<tag>/
 ```powershell
 python scripts/audit_skills.py --release-tag <tag> --installed-root "$env:USERPROFILE\.codex\skills"
 ```
+
+若要半自動發布, 可使用 [release.py](./scripts/release.py) 串接準備, 驗證與 GitHub Release, 需要 Python 3.10 以上及已登入的 GitHub CLI:
+
+```powershell
+python scripts/release.py prepare --dry-run
+python scripts/release.py prepare                 # 或加 --version 0.5.0
+# 檢查 diff 與 dist/<tag>/release-manifest.json, 自行 commit 預定發布的變更
+python scripts/release.py publish <tag>
+```
+
+`prepare` 會執行版本與 ZIP 封裝, 比對 manifest / ZIP 與目前 Skill 原始檔, 再執行 Skill audit; 不會建立 commit 或上傳 `publish` 要求乾淨的 working tree, 目前分支追蹤 `origin` 同名分支, 且 Tag 尚不存在; 輸入完整 Tag 確認後才推送目前分支並建立 GitHub Release, 上傳全部 ZIP 已存在的 `tests/` 是驗證程式碼, 保持版控; `.gitignore` 忽略的是 `dist/`, coverage, test results 等執行產物
 
 發布前核對 repository diff 與實際 asset 清單 若變更此 helper, 可執行 focused tests:
 
