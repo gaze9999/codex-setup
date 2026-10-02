@@ -39,24 +39,37 @@ class PrepareReleaseTests(unittest.TestCase):
         (root / "assets/data.txt").write_text("asset payload", encoding="utf-8")
         return root
 
-    def test_auto_patch_and_both_archive_layouts(self):
+    def test_auto_patch_and_combined_archive_layout(self):
         self.skill("alpha", crlf=True)
         self.skill("beta")
         result = release.prepare(self.repo, None, self.output)
-        self.assertEqual((result["tag"], result["skills"], result["zip_count"]), ("v1.2.4", 2, 3))
+        self.assertEqual((result["tag"], result["skills"], result["zip_count"]), ("v1.2.4", 2, 1))
         folder = Path(result["output"])
         with zipfile.ZipFile(folder / "all-skills-v1.2.4.zip") as archive:
             self.assertEqual(set(name.split("/")[0] for name in archive.namelist()), {"alpha", "beta"})
             self.assertFalse(any(name.endswith(".zip") or name.startswith("skills/") for name in archive.namelist()))
             self.assertEqual(archive.read("alpha/assets/data.txt"), b"asset payload")
             self.assertEqual(archive.read("alpha/SKILL.md"), (self.repo / "skills/alpha/SKILL.md").read_bytes())
-        with zipfile.ZipFile(folder / "alpha.zip") as archive:
-            self.assertTrue(all(name.startswith("alpha/") for name in archive.namelist()))
+        self.assertEqual({p.name for p in folder.glob("*.zip")}, {"all-skills-v1.2.4.zip"})
         text = (self.repo / "skills/alpha/SKILL.md").read_bytes()
         self.assertIn(b'version: "v1.2.4" # retain comment\r\n', text)
         self.assertIn(b'custom: "keep"\r\n', text)
         self.assertIn(b"license: MIT\r\n---\r\n", text)
         self.assertNotIn(b"\n", text.replace(b"\r\n", b""))
+
+    def test_regeneration_removes_managed_legacy_individual_archives(self):
+        self.skill("alpha")
+        result = release.prepare(self.repo, "2.0.0", self.output)
+        folder = Path(result["output"])
+        old = folder / "alpha.zip"
+        old.write_bytes((folder / "all-skills-v2.0.0.zip").read_bytes())
+        marker = folder / release.MANIFEST
+        manifest = json.loads(marker.read_text(encoding="utf-8"))
+        manifest["assets"].append({"name": old.name, "size": old.stat().st_size, "sha256": release.digest(old.read_bytes())})
+        marker.write_text(json.dumps(manifest), encoding="utf-8")
+        release.prepare(self.repo, "2.0.0", self.output)
+        self.assertFalse(old.exists())
+        self.assertEqual([a["name"] for a in json.loads(marker.read_text(encoding="utf-8"))["assets"]], ["all-skills-v2.0.0.zip"])
 
     def test_manual_version_and_missing_metadata(self):
         self.skill("alpha")
@@ -82,7 +95,7 @@ class PrepareReleaseTests(unittest.TestCase):
         self.skill("new-skill", metadata=False)
         result = release.prepare(self.repo, "v3.0.0", self.output)
         folder = Path(result["output"])
-        self.assertEqual({path.name for path in folder.glob("*.zip")}, {"renamed.zip", "new-skill.zip", "all-skills-v3.0.0.zip"})
+        self.assertEqual({path.name for path in folder.glob("*.zip")}, {"all-skills-v3.0.0.zip"})
         with zipfile.ZipFile(folder / "all-skills-v3.0.0.zip") as archive:
             self.assertEqual({name.split("/")[0] for name in archive.namelist()}, {"renamed", "new-skill"})
         manifest = json.loads((folder / release.MANIFEST).read_text(encoding="utf-8"))
@@ -116,7 +129,7 @@ class PrepareReleaseTests(unittest.TestCase):
             (root / name).write_text("excluded", encoding="utf-8")
         (root / ".env.example").write_text("EXAMPLE=", encoding="utf-8")
         result = release.prepare(self.repo, "2.0.0", self.output)
-        with zipfile.ZipFile(Path(result["output"]) / "alpha.zip") as archive:
+        with zipfile.ZipFile(Path(result["output"]) / "all-skills-v2.0.0.zip") as archive:
             self.assertEqual(set(archive.namelist()), {"alpha/SKILL.md", "alpha/assets/data.txt", "alpha/.env.example"})
 
     def test_invalid_version_and_output_inside_skills(self):
@@ -162,7 +175,7 @@ class PrepareReleaseTests(unittest.TestCase):
         result = release.prepare(self.repo, "2.0.0", self.output)
         folder = Path(result["output"])
         self.assertFalse((folder / "alpha.zip").exists())
-        with zipfile.ZipFile(folder / "renamed.zip") as archive:
+        with zipfile.ZipFile(folder / "all-skills-v2.0.0.zip") as archive:
             self.assertEqual(set(archive.namelist()), {"renamed/SKILL.md", "renamed/assets/data.txt"})
 
     def test_malformed_output_manifest_preserves_skill_version(self):

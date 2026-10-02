@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update skill versions and build individual and combined release ZIPs."""
+"""Update skill versions and build the combined release ZIP."""
 
 from __future__ import annotations
 
@@ -269,10 +269,7 @@ def prepare(repo: Path, version: str | None, output_root: Path, dry_run: bool = 
     revised = {skill["path"]: update_skill(skill, tag, defaults) for skill in skills}
     contents = {name: revised.get(path, data) for name, (path, data) in files.items()}
     timestamp = datetime.now(timezone.utc).timetuple()[:6]
-    archives = {f"{skill['path'].parent.name}.zip": zip_bytes(
-        {name: data for name, data in contents.items() if name.startswith(skill['path'].parent.name + "/")}, timestamp)
-        for skill in skills}
-    archives[f"all-skills-{tag}.zip"] = zip_bytes(contents, timestamp)
+    archives = {f"all-skills-{tag}.zip": zip_bytes(contents, timestamp)}
     manifest = {"producer": PRODUCER, "tag": tag, "skill_count": len(skills), "source_files": len(files),
                 "skills": [skill["path"].parent.name for skill in skills],
                 "assets": [{"name": name, "size": len(data), "sha256": digest(data)} for name, data in sorted(archives.items())]}

@@ -36,7 +36,7 @@ def verify(tag: str, output_root: Path | None = None) -> list[Path]:
         raise ValueError("Skill metadata versions do not match the release tag")
     files = {name: data for name, (_, data) in prepare_release.snapshot(REPO, skills).items()}
     names = [skill["path"].parent.name for skill in skills]
-    expected = {f"{name}.zip" for name in names} | {f"all-skills-{tag}.zip"}
+    expected = {f"all-skills-{tag}.zip"}
     assets = manifest.get("assets")
     if (manifest.get("skills") != names or manifest.get("skill_count") != len(names)
             or manifest.get("source_files") != len(files) or not isinstance(assets, list)
@@ -50,9 +50,7 @@ def verify(tag: str, output_root: Path | None = None) -> list[Path]:
         data = path.read_bytes()
         if len(data) != asset.get("size") or prepare_release.digest(data) != asset.get("sha256"):
             raise ValueError(f"Release asset changed: {path.name}")
-        prefix = asset["name"][:-4] + "/"
-        expected_files = files if asset["name"] == f"all-skills-{tag}.zip" else {
-            name: content for name, content in files.items() if name.startswith(prefix)}
+        expected_files = files
         with zipfile.ZipFile(path) as archive:
             if (archive.testzip() is not None or set(archive.namelist()) != set(expected_files)
                     or any(archive.read(name) != content for name, content in expected_files.items())):
@@ -83,7 +81,7 @@ def publish(tag: str, asset_root: Path | None = None) -> None:
     if existing.returncode == 0:
         raise ValueError(f"GitHub Release already exists: {tag}")
     head = run("git", "rev-parse", "HEAD", capture=True)
-    print(f"Ready to push {branch} ({head[:12]}) and publish {tag} with {len(assets)} ZIPs")
+    print(f"Ready to push {branch} ({head[:12]}) and publish {tag} with {len(assets)} assets")
     if input("Type the tag to confirm: ").strip() != tag:
         print("Cancelled")
         return
@@ -98,7 +96,7 @@ def publish(tag: str, asset_root: Path | None = None) -> None:
     if (remote_release.get("tagName") != tag
             or {asset.get("name"): asset.get("size") for asset in remote_assets}
             != {path.name: path.stat().st_size for path in assets}):
-        raise ValueError("GitHub Release assets do not match the local ZIPs; inspect the release")
+        raise ValueError("GitHub Release assets do not match the local assets; inspect the release")
     print(f"Published {tag}")
 
 

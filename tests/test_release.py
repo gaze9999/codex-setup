@@ -31,7 +31,12 @@ class ReleaseTests(unittest.TestCase):
 
     def test_prepared_assets_match_source(self):
         assets = release.verify("v1.0.0")
-        self.assertEqual({path.name for path in assets}, {"sample.zip", "all-skills-v1.0.0.zip"})
+        self.assertEqual({path.name for path in assets}, {"all-skills-v1.0.0.zip"})
+
+    def test_stale_individual_asset_is_rejected(self):
+        (self.repo / "dist/v1.0.0/sample.zip").write_bytes(b"stale")
+        with self.assertRaisesRegex(ValueError, "unexpected"):
+            release.verify("v1.0.0")
 
     def test_modified_source_or_asset_is_rejected(self):
         skill = self.repo / "skills" / "sample" / "SKILL.md"
@@ -39,7 +44,7 @@ class ReleaseTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "does not match"):
             release.verify("v1.0.0")
         skill.write_text(skill.read_text(encoding="utf-8").replace("changed\n", ""), encoding="utf-8")
-        asset = self.repo / "dist" / "v1.0.0" / "sample.zip"
+        asset = self.repo / "dist" / "v1.0.0" / "all-skills-v1.0.0.zip"
         asset.write_bytes(asset.read_bytes() + b"changed")
         with self.assertRaisesRegex(ValueError, "asset changed"):
             release.verify("v1.0.0")

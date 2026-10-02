@@ -4,7 +4,7 @@
 
 此 repository 是 [global `AGENTS.md`](./agents/AGENTS.md) 與自訂 Skill 的可版控來源 本機 Codex 設定目錄只作為安裝鏡像, 避免不同電腦雙向手動修改後產生漂移 [Agent 治理說明](./agents/README.md) 記錄分層與同步邊界
 
-建立新專案治理架構時, 可用 [agent-governance project starter](./skills/agent-governance/assets/project-starter/README.md) 依實際專案類型產生精簡的 root 與 nested `AGENTS.md`, Codex subagent 角色及條件式 task 指引 範本隨該 Skill ZIP 提供, 不依賴固定的本機 repository 路徑
+建立新專案治理架構時, 可用 [agent-governance project starter](./skills/agent-governance/assets/project-starter/README.md) 依實際專案類型產生精簡的 root 與 nested `AGENTS.md`, Codex subagent 角色及條件式 task 指引 範本隨 all-skills 組合包提供, 不依賴固定的本機 repository 路徑
 
 可分享的操作方式, 提示詞與治理取捨另放 [Codex Playbook](https://github.com/gaze9999/codex-playbook); 本 repo 保留可直接安裝的工具包, 個人環境與工作紀錄不放入公開範例
 
@@ -112,9 +112,9 @@ python scripts/audit_skills.py --installed-root "$env:USERPROFILE\.codex\skills"
 
 ### ChatGPT App
 
-行動端可從 [GitHub Releases](https://github.com/gaze9999/codex-setup/releases) 下載單一 Skill ZIP, 再到 `Plugins → Skills → Create → Upload from your computer` 上傳
+從 [GitHub Releases](https://github.com/gaze9999/codex-setup/releases) 下載 all-skills 組合包並解壓; 若用戶端只接受單一 Skill ZIP, 將要安裝的同名 Skill 目錄另包成 ZIP, 再到 `Plugins → Skills → Create → Upload from your computer` 上傳
 
-ZIP 頂層需保留單一同名 Skill 目錄:
+單一 Skill 的上傳 ZIP 頂層需保留同名目錄; release 只提供組合包:
 
 ```text
 skill-name.zip
@@ -139,8 +139,7 @@ Skill path: skills/<skill-name>
 ## Release 封裝
 
 - 全部 Skill 共用 repository 的 release Tag, `SKILL.md` 的 `metadata.version` 使用完整 Tag, 例如 `v0.4.2`; `metadata.author` 保存公開署名, `metadata.repository` 保存來源 repository URL
-- 每個 release 為每個 Skill 提供獨立 ZIP asset, 不只依賴 GitHub 自動產生的 source archive
-- ZIP asset basename 與 Skill 目錄相同, 頂層只包含該 Skill 目錄
+- 每個 release 的 Skills 只提供一份 `all-skills-<tag>.zip` 組合包, 不再產生個別 Skill ZIP; 舊 release 資產保留
 - 整合 ZIP 的頂層直接放各 Skill 目錄, 不增加外層 `skills/`, 也不包入個別 ZIP
 
 ### 自動版本與 ZIP
@@ -162,7 +161,6 @@ python scripts/prepare_release.py --dry-run
 
 ```text
 dist/<tag>/
-├── <skill-name>.zip        # 每個目前存在的 Skill 各一份
 ├── all-skills-<tag>.zip    # 直接包含全部 Skill 目錄及原始檔案
 └── release-manifest.json  # 當次清單與 ZIP SHA-256
 ```
@@ -171,11 +169,11 @@ dist/<tag>/
 - 缺少 `metadata` 時會加入版本; 缺少 author 或 repository 時, 若其他 Skill 只有一種既有值則沿用, 已有值保留
 - 沒有任何版本紀錄時從 `v0.0.1` 開始; 自動遞增只讀本機 metadata 與 Tag, 不查遠端 Tag
 - ZIP 使用當下 working tree 內容, 包含新增而未提交的檔案; 有 Git 時遵循忽略規則, 並排除常見快取, logs, 暫存及 secret 檔案; `.env.example` 保留
-- 封裝後驗證 ZIP 結構, CRC 與逐檔內容; 若同版本重新執行, 只取代此 script 管理且未被另行修改的輸出, 清除已刪除或改名 Skill 的舊 ZIP
+- 封裝後驗證 ZIP 結構, CRC 與逐檔內容; 若同版本重新執行, 只取代此 script 管理且未被另行修改的輸出, 移除該產出目錄中先前 manifest 管理的舊個別 ZIP
 - 若封裝後再改 Skill, 用 `--version <same-tag>` 重封裝; 不帶版本會再增加一次 patch
 - 可用 `--repo <path>` 指定另一個具有 `skills/` 的 repository, 或以 `--output-dir <path>` 指定輸出根目錄; 每個 Tag 仍有獨立子目錄
 
-這支 script 準備版本與封裝, 不同步安裝鏡像或執行 Git / GitHub 發布 封裝完成後, 依「安裝與同步」將 Skill 單向同步到本機, 用當次 Tag 驗證, 再 commit, push, 建立同名 Tag 並將當次全部 ZIP 上傳 GitHub Release:
+這支 script 準備版本與封裝, 不同步安裝鏡像或執行 Git / GitHub 發布 封裝完成後, 依「安裝與同步」將 Skill 單向同步到本機, 用當次 Tag 驗證, 再 commit, push, 建立同名 Tag 並將當次組合 ZIP 與 MCP 資產上傳 GitHub Release:
 
 ```powershell
 python scripts/audit_skills.py --release-tag <tag> --installed-root "$env:USERPROFILE\.codex\skills"
