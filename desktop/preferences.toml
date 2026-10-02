@@ -1,0 +1,12 @@
+# Merge these selected preferences; never replace the whole user config.
+[features]
+memories = true
+
+[memories]
+generate_memories = true
+use_memories = true
+# false permits memory generation from chats that used external tools.
+disable_on_external_context = false
+
+[desktop]
+git-branch-prefix = "dev/"

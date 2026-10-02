@@ -8,6 +8,8 @@
 
 可分享的操作方式, 提示詞與治理取捨另放 [Codex Playbook](https://github.com/gaze9999/codex-playbook); 本 repo 保留可直接安裝的工具包, 個人環境與工作紀錄不放入公開範例
 
+Desktop 的 Git commit, PR, watcher 提示詞與記憶 / 個人化偏好, 保存於 [可編輯 Desktop 設定](./desktop/README.md); renderer 僅產生可合併的白名單 TOML 片段, 不覆寫 app 設定
+
 ## Skill catalog
 
 | 類別 | Skill | 用途 |

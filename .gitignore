@@ -67,3 +67,6 @@ junit.xml
 # Local working files
 *.tmp
 *.temp
+
+# Generated local Desktop settings fragment
+/desktop-settings.local.toml
