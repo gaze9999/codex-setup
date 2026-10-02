@@ -18,6 +18,7 @@ Use this reference only when governance work changes role context, compaction, t
 
 - Choose fresh context, selected history or fuller history according to the recipient's actual need and supported tools. Do not universally require full inheritance or an extremely short summary. Keep routine logs out; preserve failure evidence when it prevents repeated investigation.
 - A review needs the original acceptance basis and current code, without a leading narrative asserting that the implementation is correct. Advice on failed approaches may need more history than a review.
+- For a security-review handoff, use the active security tool's typed schema and include key code excerpts, effective registration, attacker prerequisites, source-to-sink direction, counterevidence and severity rationale in the first candidate packet. Preserve candidate IDs and rejected hypotheses; distinguish inventory/search coverage from completed review, unresolved dependencies and the assigned stop condition. This supplements evidence delivery, not the security plugin workflow or its completion gates.
 - Reuse verification only within its source revision, relevant diff and environment limits. Recheck changed facts and affected behavior; a prior agent's passing checks do not cover later edits.
 - A fork does not receive later decisions automatically. Communicate changed governing sources and affected work through an authorized channel or progress record; do not assume task names or completion notices establish acceptance.
 
