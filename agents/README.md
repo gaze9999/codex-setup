@@ -61,4 +61,4 @@ Codex 先依 explicit spawn, `[agents]` defaults 與 parent 解析設定, 再套
 
 實際操作依 [task-routing](../skills/task-routing/SKILL.md); Main 可直接完成相依工作, 子工作依實際範圍選擇設定, 不綁定 Main 的 model 或 reasoning. 回傳待驗收和已接受分開, 保留 owner, 相依, 來源狀態, 未完成事項及下一步
 
-可分享的工作流, 提示詞範例與研究取捨維護於 [Codex Playbook](https://github.com/gaze9999/codex-playbook); 本 repo 保留可執行的指示與工具, 不複製個人筆記或當次對話狀態. 詳細說明不作為所有任務的必讀 context
+工作流, 提示詞範例與研究取捨見 [Codex Playbook](https://github.com/gaze9999/codex-playbook); 依任務需要選讀, 可執行的指示與工具由本 repo 維護

@@ -1,6 +1,6 @@
 # Codex Desktop 可編輯設定
 
-此目錄保存可攜的提示詞與已確認偏好, 不包含帳號憑證, 私人記憶, 對話, MCP secrets 或整份 app state
+此目錄管理 Codex Desktop 的 Git 提示詞與個人化偏好, 可直接編輯 Markdown 與 TOML 來源
 
 ## 平常修改的位置
 
@@ -14,7 +14,7 @@
 
 先修改來源檔, 再將提示詞完整貼到對應欄位; 這些欄位保存文字, 不是 Markdown 檔案路徑. 不需要為每個設定另建 Skill 或 agent role
 
-公開提示詞已移除特定專案的交易碼與需求單範例, 並將 PR watcher 的 commit 格式對齊提交提示; PR 標題仍使用 `type(scope): summary`. 不相容變更保留提示詞中明訂的 `type(scope)!:` 形式. 發布 repository 不會自動更改目前 app 內已保存的提示詞
+PR watcher 與提交提示使用相同的 commit 格式; PR 標題仍使用 `type(scope): summary`. 不相容變更保留提示詞中明訂的 `type(scope)!:` 形式. 發布 repository 不會自動更改目前 app 內已保存的提示詞
 
 ## 產生可合併的 TOML 片段
 

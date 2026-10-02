@@ -6,7 +6,7 @@
 
 建立新專案治理架構時, 可用 [agent-governance project starter](./skills/agent-governance/assets/project-starter/README.md) 依實際專案類型產生精簡的 root 與 nested `AGENTS.md`, Codex subagent 角色及條件式 task 指引 範本隨 all-skills 組合包提供, 不依賴固定的本機 repository 路徑
 
-可分享的操作方式, 提示詞與治理取捨另放 [Codex Playbook](https://github.com/gaze9999/codex-playbook); 本 repo 保留可直接安裝的工具包, 個人環境與工作紀錄不放入公開範例
+操作方式, 提示詞與治理取捨見 [Codex Playbook](https://github.com/gaze9999/codex-playbook); 本 repo 維護可直接安裝的 Skills, 指示與工具
 
 Desktop 的 Git commit, PR, watcher 提示詞與記憶 / 個人化偏好, 保存於 [可編輯 Desktop 設定](./desktop/README.md); renderer 僅產生可合併的白名單 TOML 片段, 不覆寫 app 設定
 
@@ -44,7 +44,7 @@ Desktop 的 Git commit, PR, watcher 提示詞與記憶 / 個人化偏好, 保存
 |---|---|
 | [my-py-tools](https://github.com/gaze9999/my-py-tools) | 不依賴 Codex 的通用 CLI 與 Python 核心工具 |
 | codex-setup | Codex 專用 Skills, agent 指示, MCP adapter 與安裝同步; 使用 versioned 通用核心而不複製實作 |
-| [codex-playbook](https://github.com/gaze9999/codex-playbook) | 可分享的去識別化工作方法, 範例, 治理與研究取捨 |
+| [codex-playbook](https://github.com/gaze9999/codex-playbook) | 工作方法, 範例, 治理與研究取捨 |
 
 個人環境與心得留在個人筆記, 專案規格與進度留在該專案. 一次任務只維護真正受影響的來源, 不要求同步全部位置或搬移既有獨立工具 repository
 
