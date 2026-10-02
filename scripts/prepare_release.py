@@ -23,7 +23,7 @@ VERSION = re.compile(r"v?(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-[0-9A-Za-z.
 SKILL_NAME = re.compile(r"[a-z0-9]+(?:-[a-z0-9]+)*")
 PRODUCER = "codex-setup.prepare_release.v1"
 MANIFEST = "release-manifest.json"
-SKIP_DIRS = {".git", "__pycache__", ".venv", "venv", "node_modules", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".cache"}
+SKIP_DIRS = {"build", "dist", ".git", "__pycache__", ".venv", "venv", "node_modules", ".pytest_cache", ".mypy_cache", ".ruff_cache", ".cache"}
 SKIP_FILES = ("*.pyc", "*.pyo", "*.log", "*.tmp", "*.temp", "*.pem", "*.key", "*.swp", "*.swo", "*~", ".DS_Store", "Thumbs.db", "Desktop.ini")
 
 
@@ -141,6 +141,7 @@ def git_output(repo: Path, *args: str) -> str | None:
 
 def ignored(path: Path) -> bool:
     return (bool(SKIP_DIRS.intersection(path.parts))
+            or any(part.endswith(".egg-info") for part in path.parts)
             or (path.name.startswith(".env") and path.name != ".env.example")
             or any(fnmatch.fnmatch(path.name, pattern) for pattern in SKIP_FILES))
 
@@ -155,7 +156,7 @@ def snapshot(repo: Path, skills: list[dict]) -> dict[str, tuple[Path, bytes]]:
             current = Path(directory)
             if current.is_symlink() or not current.resolve().is_relative_to(root.resolve()):
                 raise ValueError(f"Linked skill directory is unsupported: {current}")
-            dirs[:] = [name for name in dirs if name not in SKIP_DIRS]
+            dirs[:] = [name for name in dirs if not ignored(Path(name))]
             for name in dirs:
                 child = current / name
                 if child.is_symlink() or not child.resolve().is_relative_to(root.resolve()):

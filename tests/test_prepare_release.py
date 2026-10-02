@@ -125,6 +125,9 @@ class PrepareReleaseTests(unittest.TestCase):
         root = self.skill("alpha")
         (root / "__pycache__").mkdir()
         (root / "__pycache__/cache.pyc").write_bytes(b"cache")
+        for name in ("build", "dist", "package.egg-info"):
+            (root / name).mkdir()
+            (root / name / "generated.txt").write_text("excluded", encoding="utf-8")
         for name in (".env", ".env.local", "run.log", "private.key", "notes.tmp"):
             (root / name).write_text("excluded", encoding="utf-8")
         (root / ".env.example").write_text("EXAMPLE=", encoding="utf-8")
