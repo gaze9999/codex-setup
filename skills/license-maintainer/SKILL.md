@@ -2,7 +2,7 @@
 name: license-maintainer
 description: Create, audit, or update repository LICENSE, NOTICE, COPYRIGHT, third-party notices, SPDX headers, and related README license references from verified ownership, dependency, and distribution evidence. Use for copyright and licensing-document maintenance; do not choose or change a license without explicit user direction.
 metadata:
-  version: "v0.4.6"
+  version: "v0.4.7"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---

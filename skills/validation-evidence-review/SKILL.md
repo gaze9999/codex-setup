@@ -3,7 +3,7 @@ name: validation-evidence-review
 description: Review existing local validation evidence without rerunning commands. Use for run result summaries, baseline checks, partial coverage, and deciding what still needs verification.
 metadata:
   short-description: Review existing validation evidence and gaps
-  version: "v0.4.6"
+  version: "v0.4.7"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---

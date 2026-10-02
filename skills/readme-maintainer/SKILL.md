@@ -2,7 +2,7 @@
 name: readme-maintainer
 description: Create, restructure, or substantially improve a repository README from verified source, configuration, scripts, deployment, and documentation evidence. Use for README-focused work, not routine post-change documentation synchronization.
 metadata:
-  version: "v0.4.6"
+  version: "v0.4.7"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---

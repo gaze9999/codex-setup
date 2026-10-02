@@ -3,7 +3,7 @@ name: document-source-matching
 description: Locate and assess Markdown extracts for an original local document by recorded source path and SHA-256. Use when choosing an extracted Markdown aid or deciding whether the original must be checked again.
 metadata:
   short-description: Match Markdown extracts to original sources
-  version: "v0.4.6"
+  version: "v0.4.7"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---

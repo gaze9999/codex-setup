@@ -3,7 +3,7 @@ name: environment-consistency-check
 description: Compare local Skills, runtime mirrors, or environment trees without synchronizing them. Use for versioned file drift, missing or extra files, and hash-based consistency checks.
 metadata:
   short-description: "Compare Skills and environment mirrors without writes"
-  version: "v0.4.6"
+  version: "v0.4.7"
   author: "gaze9999"
   repository: "https://github.com/gaze9999/codex-setup"
 ---

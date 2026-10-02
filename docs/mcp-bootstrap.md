@@ -66,7 +66,7 @@ python scripts/prepare_mcp_bundle.py --wheel-dir /absolute/all-built-wheels
 
 預設產物 `dist/mcp/bootstrap/` 包含 wheel, `bundle.json` 與可攜 `installer/`; 使用者在 `installer/` 執行 wrapper 即可, 不必 clone repo; checkout 入口預設也查同一 bundle 位置; `--bundle` 可覆蓋
 
-產物標示 `local_unpublished_bundle`, 不由既有 release 腳本自動發佈; 目前 release assets 提供 Skill ZIP 與 Local Documents / Workspace Inspection server wheel, 不包含 Jev wheel 或 baseline bundle; 缺少 bundle / matching wheel 時顯示具體 pending 說明
+產生器的 `bundle.json` 標示 `local_unpublished_bundle`, 不自動執行遠端發佈; v0.4.7 release 另提供已核對來源的 baseline portable bundle, Jev wheel 與 SHA-256 manifest. Bundle 包含 5 個第一方 wheel 與 installer, 不包含私人設定或 credential; 公開相依套件仍需對應平台的 wheel cache 或網路. 缺少 bundle / matching wheel 時顯示具體 pending 說明
 
 Jev wheel 建置:
 
