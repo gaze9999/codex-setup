@@ -8,9 +8,13 @@
 | `codex-local-documents-mcp` | 本 repo `mcp_servers/local_documents/` | 安裝 server wheel, 使用模組或 console command 啟動 |
 | `my-py-workspace-core` | `my-py-tools` | 安裝 versioned wheel, 公開 API 為 `my_py_workspace_core`, 目前 API 1 |
 | `codex-workspace-inspection-mcp` | 本 repo `mcp_servers/workspace_inspection/` | 唯讀查詢驗證證據與環境差異 |
-| Jev | 本 repo `skills/jev-evaluation/` | 沿用獨立 Skill installer, 可指定 Skill root 與 runtime |
+| Jev | 本 repo `skills/jev-evaluation/` | `codex-jev-mcp` wheel 與相容 Skill installer, 可獨立部署 |
 
 核心 wheel 從同一份 CLI 原始碼建置 namespaced package, 不複製另一份核心到本 repo; MCP runtime 使用已安裝的套件, 不修改 `sys.path` 來匯入另一個 working tree, 不保留 CLI repo 路徑
+
+## Baseline 快速安裝
+
+[統一安裝與監看說明](mcp-bootstrap.md) 提供預設位置, 本機 wheel bundle, read roots, preview/apply 與環境沿用; 使用 `bootstrap-mcp.cmd --apply` 或 `sh bootstrap-mcp.sh --apply`, 不必逐一填 core/server wheel 路徑; 未設定 roots 的新工具先列 pending
 
 ## 任意位置部署 Local Documents
 

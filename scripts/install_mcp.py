@@ -134,6 +134,9 @@ def workspace(args: argparse.Namespace) -> int:
 
 
 def main(argv: list[str] | None = None) -> int:
+    selected = sys.argv[1:] if argv is None else argv
+    if selected and selected[0] == "bootstrap":
+        return subprocess.run([sys.executable, "-B", str(ROOT / "scripts/bootstrap_mcp.py"), *selected[1:]], check=False).returncode
     parser = argparse.ArgumentParser(description=__doc__, epilog="Jev options are forwarded to its existing installer. Add --apply to install either server.")
     sub = parser.add_subparsers(dest="server", required=True)
     doc = sub.add_parser("local_documents", help="Install or reuse portable wheels in an isolated environment")

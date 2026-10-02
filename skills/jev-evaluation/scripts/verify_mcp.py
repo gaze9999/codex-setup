@@ -9,17 +9,13 @@ import os
 from pathlib import Path
 import sys
 
-if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--online", action="store_true", help="Submit a small public English example to Jev.")
-    args = parser.parse_args()
-
 from mcp import Client
 from mcp.client.stdio import StdioServerParameters
 
 
 async def verify(online: bool) -> int:
-    server = StdioServerParameters(command=sys.executable, args=["-B", str(Path(__file__).with_name("mcp_server.py"))], env=os.environ.copy())
+    arguments = ["-I", "-B", "-m", __package__ + ".mcp_server"] if __package__ else ["-B", str(Path(__file__).with_name("mcp_server.py"))]
+    server = StdioServerParameters(command=sys.executable, args=arguments, env=os.environ.copy())
     async with Client(server, read_timeout_seconds=30) as client:
         names = sorted(tool.name for tool in (await client.list_tools()).tools)
         if names != ["jev_evaluate", "jev_rank", "jev_status"]:
@@ -35,9 +31,16 @@ async def verify(online: bool) -> int:
         return 0 if data.get("status") in {"ok", "skipped"} else 1
 
 
-if __name__ == "__main__":
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--online", action="store_true", help="Submit a small public English example to Jev.")
+    args = parser.parse_args(argv)
     try:
-        raise SystemExit(asyncio.run(asyncio.wait_for(verify(args.online), timeout=45)))
+        return asyncio.run(asyncio.wait_for(verify(args.online), timeout=45))
     except Exception:
         print('{"status":"fallback","reason":"mcp_verification_unavailable"}')
-        raise SystemExit(1)
+        return 1
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

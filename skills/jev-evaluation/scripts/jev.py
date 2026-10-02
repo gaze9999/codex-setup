@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import argparse
+from contextlib import nullcontext
 import getpass
 from http.client import HTTPException
 import json
@@ -17,6 +18,43 @@ import tempfile
 import time
 from pathlib import Path
 from urllib import error, request
+
+try:
+    if __package__:
+        from . import jev_telemetry as telemetry
+    else:
+        import jev_telemetry as telemetry
+except Exception:
+    telemetry = None
+
+
+def observe(operation, model=None):
+    try:
+        return telemetry.observe(operation, model) if telemetry else nullcontext()
+    except Exception:
+        return nullcontext()
+
+
+def complete(observation, result):
+    try:
+        if observation is not None:
+            observation.complete(result)
+    except Exception:
+        pass
+    return result
+
+
+def source(value):
+    return telemetry.source(value) if telemetry else nullcontext()
+
+
+def record(method, *args):
+    try:
+        if telemetry:
+            getattr(telemetry, method)(*args)
+    except Exception:
+        pass
+
 
 API = "https://api.typesafe.ai/v1/"
 MAX_BYTES = 64 * 1024
@@ -167,17 +205,24 @@ def call_api(endpoint: str, key: str, data: dict | None, timeout: float, retries
     req = request.Request(API + endpoint, data=body, headers={"Authorization": "Bearer " + key, "Content-Type": "application/json"})
     opener = request.build_opener(NoRedirect())
     for attempt in range(retries + 1):
+        started, size, outcome, code = time.monotonic(), None, "network_unavailable", None
         try:
             with opener.open(req, timeout=timeout) as response:
+                code = getattr(response, "status", None)
                 raw = response.read(MAX_BYTES + 1)
+                size = len(raw)
             if len(raw) > MAX_BYTES:
+                outcome = "response_too_large"
                 raise Problem("response_too_large")
+            outcome = "invalid_response"
             result = json.loads(raw, parse_constant=invalid_number)
             if not isinstance(result, dict):
                 raise Problem("invalid_response")
+            outcome = "ok"
+            record("provider", result)
             return result
         except error.HTTPError as exc:
-            code = exc.code
+            code, outcome = exc.code, "http_error"
             delay = 0.5
             try:
                 delay = max(delay, float(exc.headers.get("Retry-After", "0") if exc.headers is not None else "0"))
@@ -188,11 +233,14 @@ def call_api(endpoint: str, key: str, data: dict | None, timeout: float, retries
                 raise Problem(f"http_{code}") from None
             time.sleep(delay)
         except (error.URLError, TimeoutError, OSError, HTTPException):
+            outcome = "network_unavailable"
             if attempt == retries:
                 raise Problem("network_unavailable") from None
             time.sleep(0.5)
         except (ValueError, UnicodeError, RecursionError):
             raise Problem("invalid_response") from None
+        finally:
+            record("attempt", started, len(body) if body else 0, size, outcome, code)
     raise Problem("network_unavailable")
 
 
@@ -279,46 +327,48 @@ def run(args) -> tuple[dict, int]:
         save_key(key_path(args.key_file), getpass.getpass("TypeSafe API key (hidden): "), args.replace)
         return {"status": "ok", "credential_saved": True}, 0
     if args.command == "doctor":
-        result = {"python": platform.python_version(), "system": platform.system(), "architecture": platform.machine()}
-        try:
-            key, source = load_key(args.key_file)
-        except Problem as exc:
-            return {"status": "fallback", **result, "credential_available": False, "reason": str(exc)}, 1
-        result.update(credential_available=True, credential_source=source)
-        if args.online:
-            models = call_api("models", key, None, args.timeout, args.retries).get("models")
-            if not isinstance(models, list) or not all(isinstance(m, dict) and text(m.get("name")) for m in models):
-                raise Problem("invalid_response")
-            result["models"] = [m["name"] for m in models]
-        return {"status": "ok", **result}, 0
+        with observe("doctor_online" if args.online else "doctor_local") as observation:
+            result = {"python": platform.python_version(), "system": platform.system(), "architecture": platform.machine()}
+            try:
+                key, source = load_key(args.key_file)
+            except Problem as exc:
+                return complete(observation, {"status": "fallback", **result, "credential_available": False, "reason": str(exc)}), 1
+            result.update(credential_available=True, credential_source=source)
+            if args.online:
+                models = call_api("models", key, None, args.timeout, args.retries).get("models")
+                if not isinstance(models, list) or not all(isinstance(m, dict) and text(m.get("name")) for m in models):
+                    raise Problem("invalid_response")
+                result["models"] = [m["name"] for m in models]
+            return complete(observation, {"status": "ok", **result}), 0
     return evaluate_data(read_input(args.input), args.model, args.timeout, args.retries, args.command == "rank", args.dry_run, args.key_file)
 
 
 def evaluate_data(data: dict, model: str = "jev-latest", timeout: float = 8, retries: int = 1, rank: bool = False, dry_run: bool = False, key_file: Path | None = None) -> tuple[dict, int]:
-    items = None
-    if rank:
-        data, items = rank_request(data)
-        if not data["questions"]:
-            return {"status": "skipped", "reason": "all_candidates_required", "candidates": rank_items(items)}, 0
-    prepared = payload(data, model)
-    if dry_run:
-        result = {"status": "dry_run", "model": model, "question_types": {k: q["type"] for k, q in prepared["questions"].items()}, "request_bytes": len(json.dumps(prepared, ensure_ascii=False).encode("utf-8"))}
+    with observe("rank" if rank else "evaluate", model) as observation:
+        items = None
+        if rank:
+            data, items = rank_request(data)
+            if not data["questions"]:
+                return complete(observation, {"status": "skipped", "reason": "all_candidates_required", "candidates": rank_items(items)}), 0
+        prepared = payload(data, model)
+        if dry_run:
+            result = {"status": "dry_run", "model": model, "question_types": {k: q["type"] for k, q in prepared["questions"].items()}, "request_bytes": len(json.dumps(prepared, ensure_ascii=False).encode("utf-8"))}
+            if items is not None:
+                result["candidates"] = rank_items(items)
+            return complete(observation, result), 0
+        started = time.monotonic()
+        try:
+            key, _ = load_key(key_file)
+            evaluated = answers(call_api("systemone", key, prepared, timeout, retries), prepared["questions"])
+        except Problem as exc:
+            result = {"status": "fallback", "reason": str(exc)}
+            if items is not None:
+                result["candidates"] = rank_items(items)
+            return complete(observation, result), 1
+        evaluated["latency_ms"] = round((time.monotonic() - started) * 1000)
         if items is not None:
-            result["candidates"] = rank_items(items)
-        return result, 0
-    started = time.monotonic()
-    try:
-        key, _ = load_key(key_file)
-        evaluated = answers(call_api("systemone", key, prepared, timeout, retries), prepared["questions"])
-    except Problem as exc:
-        result = {"status": "fallback", "reason": str(exc)}
-        if items is not None:
-            result["candidates"] = rank_items(items)
-        return result, 1
-    evaluated["latency_ms"] = round((time.monotonic() - started) * 1000)
-    if items is not None:
-        evaluated["candidates"] = rank_items(items, evaluated.pop("answers"))
-    return evaluated, 0
+            evaluated["candidates"] = rank_items(items, evaluated.pop("answers"))
+        return complete(observation, evaluated), 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -344,7 +394,8 @@ def main(argv: list[str] | None = None) -> int:
             raise Problem("python_3_10_required")
         if args.command != "setup-key" and (not math.isfinite(args.timeout) or not 0 < args.timeout <= 20):
             raise Problem("invalid_timeout")
-        result, code = run(args)
+        with source("cli"):
+            result, code = run(args)
     except (Problem, OSError, EOFError, KeyboardInterrupt) as exc:
         reason = str(exc) if isinstance(exc, Problem) else "local_operation_unavailable"
         result, code = {"status": "fallback", "reason": reason}, 1

@@ -4,7 +4,32 @@ Jev 用於已整理候選的語意排序與有限分類; 文件搜尋, 必讀規
 
 MCP 與 Skill 實作維持在 `codex-setup/skills/jev-evaluation/`, 各專案共用同一份使用者層級設定, 不在每個 repo 建立另一份 server
 
-## 先檢查本機狀態
+## 何時值得使用
+
+先完成本地搜尋與來源版本, 狀態及相依篩選; 仍有多份可能相關的段落需排閱讀順序, 或候選摘要需依明確分類/評分標準比較時, 才考慮 Jev. 候選少, 順序已定或現有規則足以決定時直接由 Main 處理; 不把 Jev 當成每輪前置檢查
+
+跨文件/歷史證據排序, 工作項目分類與共用工具候選比較的邊界見 [Skill 使用情境](../skills/jev-evaluation/references/usage.md#when-to-use-jev). Jev 不決定項目已完成, 可開工或規格衝突採哪一方, 也不替代程式等價, 權限, hash 與 Test 驗證; 全面檢查仍須涵蓋全部要求
+
+query, rubric 與候選摘要都需符合外傳授權; 改成摘要或移除個資不代表自動獲准. 排序後先讀相關 Markdown 抽出版, 需要畫面證據, 缺漏/疑義/版本衝突或明確原始來源核對時才回查原檔
+
+## 呼叫原則
+
+一次問一個可明確判斷的語意條件, 選項與 criteria 保持一致, 缺少資訊時保留 unknown; 計數, 日期先後, 版本與 ID 比較交給程式. 同一批必要 state 的獨立問題才合併, 不為 batch 塞入無關全文; rank helper 已合併 optional candidates, 不需要再逐筆呼叫
+
+新的 rubric, model 或繁體中文情境先以可外傳且有預期答案的代表案例檢查; confidence 不代表事實正確率. 相同輸入與規則的結果可在當次工作重用, 來源改變則重查; 不新增例行輪詢或每輪評分. 完整設計邊界見 [question design](../skills/jev-evaluation/references/usage.md#question-design-and-call-cost), 可分享的說明另見 [Codex Playbook](https://github.com/gaze9999/codex-playbook)
+
+## 如何辨識實際使用
+
+| 紀錄 | 能證明的範圍 |
+| --- | --- |
+| 已安裝/註冊 | 設定存在, 不代表目前對話已載入 |
+| `jev_status` 或 required-only 離線驗證 | 本機狀態或 MCP 通道, 沒有對工作候選做遠端評分 |
+| `jev_rank` / `jev_evaluate` 回傳 `status=ok` | 該次語意比較完成, 不代表 Main 已接受結果或程式驗證通過 |
+| `status=fallback` / `skipped` / `dry-run` | 未完成遠端語意比較, 依實際狀態繼續原流程 |
+
+實際使用後簡短說明用途, tool/status 與 Main 採用方式或 fallback; 回應有 model 才記錄實際 model. 不預設新增永久 log, 不貼輸入內容或 Key, 未使用的原因僅在使用者詢問或與本次評估相關時說明
+
+## 需要診斷時檢查本機狀態
 
 可以對 Codex 說:
 
@@ -125,3 +150,11 @@ macOS/Linux 可使用已確認的 `python3`; CLI 參數與 MCP 工具參數不�
 | 排序與實際內容不一致 | 回看來源, 以規格與確定性驗證為準, 不自動採納分數 |
 
 這是本機 stdio MCP, 本套件不提供公開 HTTPS endpoint; 其他系統是否可用需確認其 MCP client 能力, 各台電腦的 runtime 與 credential 分別安裝
+
+## Wheel 與選用本機監看
+
+新版 `codex-jev-mcp` wheel 與 Skill 使用同一份 Python client, 可從任意工作目錄以 `python -I -B -m codex_jev_mcp.mcp_server` 啟動; baseline bundle 安裝方式見 [統一安裝入口](mcp-bootstrap.md), 原 Skill installer 仍可使用
+
+永久紀錄預設關閉; 明確需要時, 安裝獨立的 `local-activity-monitor`, 使用 `--enable-jev --configure-only` 啟用, 再以 `--codex --open` 開啟本機頁面; 停用使用 `--disable-jev --configure-only`; 舊 MCP process 需重新載入新版 client
+
+只保存時間, operation/source, model, known tokens, latency, HTTP attempts 與 body bytes/status; 不保存 query, rubric, candidates, state, answers, Key, header 或 raw error; telemetry 失敗不改變 Jev 結果; 未知 token 保留為 null; 畫面標示本機觀察統計, 不代表帳戶總用量, 額度或費用; 同一操作與 HTTP 重試分開計數

@@ -1,4 +1,4 @@
 interface:
   display_name: "Jev Evaluation"
   short_description: "Rank context candidates with optional Jev evaluation"
-  default_prompt: "Use $jev-evaluation for a bounded semantic comparison when useful, preserve mandatory context and source pointers, and keep implementation and acceptance with Main."
+  default_prompt: "Use $jev-evaluation after local retrieval when reading order or an explicit finite rubric needs semantic comparison; send only approved content and report actual use while Main retains required context and acceptance."

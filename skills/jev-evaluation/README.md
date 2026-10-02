@@ -4,7 +4,15 @@
 
 需要 Python 3.10+ 與首次安裝時的網路連線; Windows / macOS / Linux 使用相同原始碼, 安裝時建立各平台的獨立 Python runtime, 下載固定版本的官方 MCP SDK
 
-## 快速安裝
+## Wheel 與離線安裝驗證
+
+也可使用 `codex-jev-mcp` wheel, CLI / MCP 與此 Skill 共用同一份 client; 安裝到獨立 Python 環境後, 從任意資料夾以 `python -I -B -m codex_jev_mcp.mcp_server` 啟動, 使用 `jev-verify` 作離線 protocol 檢查; 不自動呼叫付費 API
+
+可由 codex-setup 的 baseline bundle 一次設定預設路徑與既有 runtime 沿用; 使用 `bootstrap-mcp.cmd --apply` 或 `sh bootstrap-mcp.sh --apply`; bundle 必須具備 preset 指定的 wheel; 不宣稱未發佈 wheel 可由 latest release 下載
+
+本機使用紀錄預設關閉, 明確需要時由獨立 `local-activity-monitor` 啟用; 詳細邊界見 [選用監看](references/usage.md#opt-in-local-monitoring)
+
+## 相容 Skill ZIP 安裝
 
 解壓 ZIP 後, 在含 `jev-evaluation/` 的目錄開啟終端; 已設定 Jev Key 的電腦可略過第一行
 
