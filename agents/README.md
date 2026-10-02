@@ -11,7 +11,7 @@
 
 專案的 role 設定, 未提交變更與本機 exclude 策略屬專案層, 不複製到此 global 來源檔 使用者若更改 task 名稱, 跨 task 回報仍須以實際 `threadId` 定位
 
-新專案的 root, nested, subagent 與 task 範本收在 [agent-governance project starter](../skills/agent-governance/assets/project-starter/README.md) 使用時先依專案實際內容改寫, 不把範本當成已啟用的指示 Skill ZIP 也包含這些範本, 可在另一台電腦獨立使用
+新專案的 root, nested, subagent 與 task 範本收在 [agent-governance project starter](../skills/agent-governance/assets/project-starter/README.md) 使用時先依專案實際內容改寫, 不把範本當成已啟用的指示 all-skills 組合包也包含這些範本, 可在另一台電腦獨立使用
 
 ## 可維護性與風格決策
 
@@ -31,7 +31,7 @@ Coding prompt 與規格參考先依目前任務與來源資訊找出相符的 Ma
 
 先修改本 repository 的 `agents/AGENTS.md` 與相關 profile 檔, 審查 diff 與公開內容, 再以 `python scripts/install_global_agents.py --install` 單向安裝 不帶參數時比對 `AGENTS.md` 與 `subagents.config.toml`; 已安裝版本不同時預設整批拒絕寫入, 可先人工合併, 或明確加上 `--replace` 並保留自動備份
 
-Skills 仍從 repository 的 `skills/` 目錄獨立安裝, 依根目錄 [README](../README.md) 執行驗證與鏡像比對 Release 僅提供各 Skill 的 ZIP asset; global 指示由 repository 來源檔與安裝 script 管理
+Skills 仍從 repository 的 `skills/` 目錄獨立安裝, 依根目錄 [README](../README.md) 執行驗證與鏡像比對 Release 的 Skills 僅提供 all-skills 組合 ZIP asset, 可解壓後選擇所需 Skill 目錄; global 指示由 repository 來源檔與安裝 script 管理
 
 ## 個人 model defaults
 

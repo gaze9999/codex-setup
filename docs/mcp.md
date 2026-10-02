@@ -115,7 +115,7 @@ python scripts/install_mcp.py jev --apply --replace --verify-online
 python scripts/install_mcp.py jev --help
 ```
 
-安裝位置可使用 `--skill-root`, `--runtime` 與 `--config` 指定; 獨立 Skill ZIP 的 installer 不需要完整 repo, 詳見 [Jev 安裝文件](../skills/jev-evaluation/README.md)
+安裝位置可使用 `--skill-root`, `--runtime` 與 `--config` 指定; 組合包中的 Jev Skill installer 不需要完整 repo, 詳見 [Jev 安裝文件](../skills/jev-evaluation/README.md)
 
 `--verify-online` 以內建公開範例呼叫 Jev API; 未指定時沿用離線 MCP 驗證, 不把私人專案內容當作驗證資料
 
