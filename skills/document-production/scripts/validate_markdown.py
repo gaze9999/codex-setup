@@ -2,7 +2,7 @@
 # GENERATED - DO NOT EDIT; use scripts/export_markdown_validator.py
 # Canonical source: my-py-tools/markdown/validate_structure.py
 # Package: my-py-document-core 0.2.1; API_VERSION=1
-# Source SHA-256: 1f0367072b93c35c3426079549863b5a08a6e741b2531a3d60d7c454e270ae83
+# Source SHA-256 (LF): 1f0367072b93c35c3426079549863b5a08a6e741b2531a3d60d7c454e270ae83
 """Bounded Markdown structure checks; not a complete Markdown parser."""
 
 from __future__ import annotations
