@@ -16,6 +16,7 @@ Work from the actual workflow graph and local runtime. Preserve reproducibility 
 - Resolve the ComfyUI revision or release, Python and accelerator stack, installed custom-node versions, model files or identifiers, available VRAM/RAM, and workflow JSON or image metadata.
 - Identify checkpoint, VAE, CLIP/text encoders, LoRA or other adapters, ControlNet/IP-Adapter models, sampler, scheduler, steps, CFG, seed, dimensions, batch settings, and output nodes that affect the result.
 - Confirm whether the graph is text-to-image, image-to-image, inpainting, upscaling, animation, or another pipeline. Do not assume compatible nodes or tensor shapes across workflows.
+- Distinguish editable UI workflow JSON (`nodes`/`links`) from the executable API prompt graph (`class_type`/`inputs`). Use the installed runtime's export or supported conversion and node definitions; do not submit one format where the other is expected.
 - Treat checkpoint names and local paths as environment facts. Do not invent downloads, filenames, hashes, node inputs, or version compatibility.
 
 ## Modify safely
@@ -35,6 +36,6 @@ Work from the actual workflow graph and local runtime. Preserve reproducibility 
 
 ## Verify and deliver
 
-- Validate that the workflow loads without missing nodes or broken links, then run the smallest representative execution permitted by the task.
+- Validate that the workflow loads without missing nodes or broken links, then run the smallest representative execution permitted by the task. For queued execution, track the returned job identifier through completion/error and verify output artifacts; queue acceptance alone is not execution success.
 - For visual-quality work, compare outputs using the same seed and controlled parameter differences. A successfully parsed graph does not prove visual quality.
 - Return the updated workflow or precise node changes plus the ComfyUI/custom-node/model assumptions, actual checks, output location, and unverified hardware or quality boundaries.

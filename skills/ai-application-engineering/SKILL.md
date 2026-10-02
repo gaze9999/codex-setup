@@ -13,7 +13,7 @@ Engineer AI features from the repository's actual provider, model, runtime, data
 
 ## Discover the active system
 
-- Read the relevant source, manifests, configuration examples, tests, and architecture notes before proposing a design.
+- Start with the changed path and its actual callers, manifests, configuration examples, and relevant tests; expand to architecture notes or adjacent pipelines only when a dependency or uncertainty requires them.
 - Resolve the actual provider, model/API version, SDK, runtime, deployment target, authentication flow, rate limits, streaming/event model, persistence, and available evaluation tooling.
 - For local models, also resolve hardware, serving runtime, precision, quantization, context limits, concurrency, and current benchmark evidence. Read [model-runtime.md](references/model-runtime.md) only when local inference or model selection is in scope.
 - Do not assume that model names, reasoning controls, structured output, tool calling, embeddings, token accounting, or safety behavior transfer across providers or versions.
@@ -37,5 +37,5 @@ Engineer AI features from the repository's actual provider, model, runtime, data
 
 - Use focused unit or contract tests for deterministic code, schema validation for structured boundaries, and recorded fixtures or provider mocks where live calls are unnecessary.
 - Run live or end-to-end checks only when the task requires them and credentials, cost, permissions, data handling, and environment access are authorized.
-- Evaluate the changed behavior with representative cases and explicit failure conditions. Separate code correctness from model quality, retrieval quality, provider availability, latency, and cost.
+- Evaluate changed behavior against representative cases and explicit failure conditions. Separate code correctness, model/retrieval quality, and provider availability; compare end-to-end latency and total task cost, including retries and recovery, before claiming an efficiency improvement.
 - Report the exact provider/model/runtime exercised, actual checks, blocked live boundaries, and any results that remain probabilistic or environment-specific.

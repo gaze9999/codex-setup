@@ -31,12 +31,12 @@ Evidence confidence:
 
 | Evidence | Confidence | Rule |
 |---|---|---|
-| Diff hunks + changed files | Highest | May update confirmed behavior when the diff supports it. |
+| Diff hunks + changed files | Highest | Supports implementation-change claims; runtime, deployment and acceptance claims still need their own evidence. |
 | PR / commit + changed-file list | High | Use commit text carefully; inspect relevant files when available. |
 | Release or migration note tied to code changes | Medium | Mark unsupported details as unresolved. |
 | User-provided implementation summary only | Lower | Label updates as summary-based and avoid claiming direct verification. |
 
-Do not invent behavior, file paths, flags, APIs, versions, or user-facing guarantees.
+Do not invent behavior, file paths, flags, APIs, versions, or user-facing guarantees. Preserve governing specifications and confirmed decisions when code conflicts with them; record the conflict instead of silently replacing requirements with implementation behavior. Tie verification claims to their checked source state and retain pending acceptance.
 
 ## Routing boundaries
 

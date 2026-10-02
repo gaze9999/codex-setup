@@ -10,9 +10,10 @@ metadata:
 
 # Environment Consistency Check
 
-Use `workspace_inspection.compare_environment` for bounded read-only comparison. If MCP is unavailable and `my-py-tools` is already available, use `python -m maintenance.environment_consistency`
+Resolve two existing absolute, non-nested directory roots and the requested include/exclude scope. Use `workspace_inspection.compare_environment` within its configured read roots; if unavailable and `my-py-tools` is already available, inspect `python -m maintenance.environment_consistency --help` and use its supported comparison options
 
 - Compare by relative path, size and SHA-256. Report missing, extra and changed files separately; do not reduce all differences to one pass/fail label
 - Default exclusions intentionally omit VCS internals, caches, `.env`, credentials and key material. Expand scope only when the user names the required files and their contents may be read safely
 - A difference does not authorize synchronization. Inspect ownership, source direction, version and backup expectations before proposing or performing a write
 - Repository source and installed mirrors have different roles. State which side was treated as source, and do not assume the newer timestamp is authoritative
+- State comparison scope and exclusions. A file limit, unreadable path, missing dependency, or changing tree leaves the affected comparison incomplete; do not report full equality or bypass read-root boundaries to finish it

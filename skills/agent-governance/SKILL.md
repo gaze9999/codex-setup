@@ -64,7 +64,7 @@ Keep the smallest instruction set that preserves authorization, contracts, proje
 
 ## Verify and deliver
 
-- Review the final instruction hierarchy for contradictions, unreachable references, duplicated authority, ambiguous ownership, and rules placed above their valid scope.
+- Review the final instruction hierarchy for contradictions, unreachable references, duplicated authority, ambiguous ownership, and rules placed above their valid scope. For routing changes, check direct work, bounded delegation, independent tasks, main-model changes and interrupted handoffs; each must retain authorization, unfinished work and acceptance responsibility.
 - Start with readback and relevant syntax, metadata, reference, and mirror checks for changed governance files and their affected callers. Expand only for concrete unresolved risk, insufficient or failing focused checks, or applicable required gates. Use application builds or E2E only when governance changes affect application behavior; avoid unrelated suites and new test infrastructure for text-only changes.
 - If synchronized copies were requested, compare paths and content after the copy. Syntax checks do not prove that a client reloaded the new guidance.
 - Report changed files, rules retained or moved, rules removed, actual checks, unresolved assumptions, and any runtime behavior not verified.

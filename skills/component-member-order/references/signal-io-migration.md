@@ -32,6 +32,7 @@ Treat these as behavior-sensitive cases:
 - Direct child-input assignment through `ViewChild`
 - Tests that assign directly to component input properties
 - Inputs involved in two-way binding
+- Inherited inputs/outputs, overrides, and public consumers outside the component's template
 
 For a setter input, separate the incoming signal from derived local state. Reproduce side effects with the smallest supported reactive or lifecycle mechanism only after verifying timing, initialization, and cleanup. Do not place side effects inside an input transform. If equivalent behavior cannot be demonstrated, leave that declaration unchanged and report the blocker instead of forcing the migration.
 

@@ -17,7 +17,8 @@ Activate only when the user explicitly requests a finished downloadable artifact
 
 - Derive the goal, audience, existing material, required sources, and constraints from the request before building the information architecture; ask only for gaps that materially affect the artifact.
 - When external information is required, use reliable sources that directly support the claim and verify time-sensitive facts first.
-- Create an actual openable artifact. Preserve user-supplied facts, figures, terminology, and citations; do not invent unsupported information.
+- Create an actual openable artifact at the requested or authorized destination. Inspect an existing target before replacing it and preserve independent changes. Preserve user-supplied facts, figures, terminology, and citations; do not invent unsupported information.
+- Choose the available document capability for the requested format. Use relevant PDF or document guidance only when that format needs it; do not assume a particular tool or install one. For standalone LaTeX, prefer an available built-in editor and compiler, retain the same source for follow-up edits, and distinguish compilation from visual QA.
 - Read [Document Production Guidelines](references/document-production-guidelines.md) when format-specific or layout guidance is needed.
 
 ## Format and quality

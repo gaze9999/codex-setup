@@ -24,7 +24,8 @@ Maintain filtering rules from the actual engine, syntax, evidence, and desired b
 - Use engine-native syntax before regex. When regex is necessary, anchor it, escape it for the actual parser, and consider case, encoding, separators, ports, schemes, and query ordering.
 - Preserve rule order, comments, grouping, exceptions, metadata, and generated sections unless their change is required.
 - Add a short comment only when the rule's purpose, evidence, or exception is not evident from the rule itself.
-- Do not combine unrelated targets in one rule merely to shorten the file. Keep allow/exception behavior explicit when the engine's precedence makes it significant.
+- Do not combine unrelated targets in one rule merely to shorten the file. Resolve the matching rule and engine precedence before adding an exception; priority modifiers such as AdGuard `$important` can defeat ordinary allow rules.
+- When diagnosing a suspected regression, isolate or temporarily disable the identified local rule when authorized rather than layering a broad exception over uncertain evidence. Preserve a clear path to restore it.
 
 ## Verify
 

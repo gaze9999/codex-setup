@@ -21,7 +21,8 @@ Work from the repository's actual Vue ecosystem and conventions. Do not assume V
 ## Implement the smallest complete change
 
 - Keep props and emitted events typed where the stack supports it. Preserve event names, `v-model` arguments, slot contracts, defaults, and attribute fallthrough unless the task changes that API.
-- Preserve Vue reactivity semantics. Do not destructure reactive state, replace refs, or move effects across lifecycle boundaries without checking dependency tracking and cleanup.
+- Preserve Vue reactivity semantics. Check the installed compiler before changing destructuring: Vue 3.5+ reactive `defineProps` destructure differs from ordinary `reactive()` state and earlier Vue versions. Preserve ref identity, lifecycle ownership, and reactive sources passed to watchers or composables.
+- When changing async effects, prevent stale results and preserve cleanup and watcher flush timing. Watchers created in async callbacks need explicit ownership/cleanup; use APIs supported by the installed Vue version.
 - Keep local state local. Use a composable or store only when ownership, reuse, lifecycle, and persistence justify it; do not move state globally for convenience.
 - For Nuxt or SSR, separate server-only and client-only APIs, avoid request state leaking across users, and preserve hydration-compatible initial output. Guard browser globals and side effects.
 - Preserve router guards, lazy-loading, error boundaries, loading states, empty states, forms, keyboard/focus behavior, and existing accessibility.
@@ -30,7 +31,7 @@ Work from the repository's actual Vue ecosystem and conventions. Do not assume V
 
 ## Verify
 
-- Run the repository's narrowest applicable type, unit/component, lint, and build checks. Do not invent generic package-manager commands when project scripts or workspace targets exist.
+- Select the repository's smallest sufficient existing check for the changed behavior: type/template compilation, a focused component test, lint, or build as applicable. Expand only for an affected integration or unresolved risk; use actual project scripts or workspace targets.
 - Add or update focused tests for changed component contracts, reactivity, routing, store behavior, SSR/hydration, or user interaction when the task warrants them.
 - Use a browser or component runner for behavior that static checks cannot prove. Record the route, state, actions, expected result, actual result, and console/network issues.
 - Report actual checks and keep unverified API, deployment, browser, SSR, performance, and accessibility boundaries distinct.

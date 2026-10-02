@@ -23,7 +23,7 @@ Follow the project's exact Unity editor and package contracts. Do not assume a c
 - Keep runtime and Editor-only code separated. Place editor APIs behind Editor assemblies or compile guards consistent with the project.
 - Preserve serialized field names and types unless migration is part of the task. Use the project's established migration approach for renamed or replaced serialized data.
 - Preserve asset GUIDs and their `.meta` files. Do not recreate, move, or rename assets casually, and do not hand-edit scene or prefab YAML unless the task and serialization mode make that the safest reviewed change.
-- Avoid hidden lifecycle dependencies. Respect Unity execution order, domain reload settings, scene loading, object lifetime, and disabled/destroyed object behavior.
+- Avoid hidden lifecycle dependencies. Respect Unity execution order, domain reload settings, scene loading, object lifetime, and disabled/destroyed object behavior. When domain reload is disabled, account for retained static state and event subscriptions; verify repeat Play Mode entry when changing their lifecycle.
 - Match the existing update model and performance budget. Avoid unnecessary per-frame allocation, repeated lookups, synchronous asset loads, or main-thread blocking in hot paths.
 - Keep platform, quality, graphics, input, physics, and player settings scoped to the requested targets. Do not change global ProjectSettings to solve a local issue without evidence.
 - Do not add or upgrade packages, regenerate lockfiles, or migrate render/input pipelines without explicit scope.

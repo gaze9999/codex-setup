@@ -20,3 +20,10 @@ Use this reference only when governance work changes role context, compaction, t
 - A review needs the original acceptance basis and current code, without a leading narrative asserting that the implementation is correct. Advice on failed approaches may need more history than a review.
 - Reuse verification only within its source revision, relevant diff and environment limits. Recheck changed facts and affected behavior; a prior agent's passing checks do not cover later edits.
 - A fork does not receive later decisions automatically. Communicate changed governing sources and affected work through an authorized channel or progress record; do not assume task names or completion notices establish acceptance.
+
+## Preserve work across owners
+
+- Keep one current record in the existing authorized progress destination or task context, with owner/ID, scope, dependencies, acceptance, result evidence, outstanding decisions and next action. Do not create duplicate handoff documents or store transcripts as requirements.
+- Before handoff or compaction, reconcile every active item as running, blocked, returned/pending acceptance or accepted. Include unresolved user corrections and who must receive them; short context must not omit constraints, source conflicts, failure evidence or incomplete checks.
+- Notifications are hints, not durable acceptance or guaranteed wakeups. Use supported event/wait mechanisms; on resumption, read outstanding owners and reconcile their actual artifacts before starting dependent work. A background continuation needs an explicit supported mechanism, otherwise state that user follow-up is needed.
+- Only the assigned writer edits a coupled slice. Confirm the prior writer stopped or completed before replacement; use version/hash evidence to detect concurrent changes. Required work remains pending when a thread is interrupted, archived or inaccessible.

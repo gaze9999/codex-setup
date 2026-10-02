@@ -64,7 +64,7 @@ Before extracting or inlining a helper, assess the complete call chain and the r
 
 ## Preserve behavior and comments
 
-Class field initializers execute in declaration order. Trace initializer references before moving fields and preserve any required dependency order. If the preferred order would change runtime behavior, keep the safe order and report the exception.
+Class field initializers execute in declaration order. Trace initializer references and side effects, including injected fields, base-class initialization, and constructor dependencies, before moving fields; preserve required dependency order and the project's TypeScript emit semantics. If the preferred order would change runtime behavior, keep the safe order and report the exception.
 
 - Move a member together with its decorators, existing JSDoc, and directly associated comments
 - Do not rewrite, remove, merge, or reposition existing JSDoc and comments relative to their member

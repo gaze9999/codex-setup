@@ -13,13 +13,13 @@ Produce a README that is accurate, scannable, usable by a new developer, and sui
 
 ## Activation and boundary
 
-- Use when the user explicitly asks to create, rewrite, restructure, audit, or substantially improve a README.
+- Use when the user explicitly asks to create, rewrite, restructure, audit, or substantially improve a README. An audit is read-only unless edits are also authorized; return concrete findings or no findings rather than silently rewriting it.
 - For documentation synchronization after an implementation change, use the applicable documentation-update workflow instead unless the README itself needs substantial redesign.
 - Do not modify application code, deployment, manifests, or project behavior merely to make the README easier to write.
 
 ## Establish evidence
 
-- Read the current README, manifests, lockfiles, runtime/version files, scripts, entry points, configuration examples, build/deploy files, tests, screenshots or demos, `docs/`, `CONTRIBUTING.md`, `CHANGELOG.md`, `LICENSE`, `NOTICE`, and `COPYRIGHT` as applicable.
+- Start with the current README and the evidence needed for the requested sections. Inspect relevant manifests, runtime/version files, scripts, entry points, configuration examples and build/deploy files; read lockfiles, tests, demos and related docs only when they resolve a material claim. A README task does not require reading the whole repository.
 - Derive features, architecture, requirements, commands, environment variables, package manager, build outputs, and deployment behavior from the repository. Do not infer capabilities from the repository name or stale prose.
 - Resolve the intended audience and language. Use the language selected by the user or applicable project guidance; otherwise preserve the repository's established documentation language.
 - Treat unverified commands, screenshots, badges, coverage, compatibility, roadmap items, and deployment status as unresolved rather than claims.
@@ -40,4 +40,4 @@ Produce a README that is accurate, scannable, usable by a new developer, and sui
 
 - Check headings, links, referenced paths, examples, configuration keys, and commands against repository state. Run safe existing commands only when needed and authorized.
 - Confirm that the README does not promise unimplemented behavior or tests that were not run. Clearly label optional, planned, or unverified material.
-- Return the changed README and a concise note of evidence used, actual checks, and any command, demo, deployment, badge, screenshot, or compatibility claim that remains unverified.
+- Return the changed README, or findings for a read-only audit, and a concise note of evidence used, actual checks, and any command, demo, deployment, badge, screenshot, or compatibility claim that remains unverified.

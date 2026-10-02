@@ -56,3 +56,9 @@ Codex 先依 explicit spawn, `[agents]` defaults 與 parent 解析設定, 再套
 2026-09-29 回查 [r/ClaudeAI 的局部重測案例](https://www.reddit.com/r/ClaudeAI/comments/1ws8tv3/the_code_review_gap_i_see_in_the_aiagent_era/) 與 [r/ExperiencedDevs 的測試層級討論](https://www.reddit.com/r/ExperiencedDevs/comments/1uxzx4w/frustrations_with_e2eonly_approach_to_automated/); 採納先針對 diff 與需求驗證, 修復後重測受影響範圍, 並選擇能充分檢驗該行為的最小測試層級; 這些是案例與意見, 不代表所有變更都能只跑單一測試
 
 [Microsoft Test Impact Analysis](https://learn.microsoft.com/en-us/azure/devops/pipelines/test/test-impact-analysis?view=azure-devops) 與 [Paul Hammant 的工程方法說明](https://martinfowler.com/articles/rise-test-impact-analysis.html) 以修改與測試相依選擇相關子集; 範圍無法可靠判定時需要較廣驗證; 此處採用選擇原則, 不假設該工具支援目前專案, 不導入新測試基礎設施, 並保留適用的 CI / release 門檻
+
+## 分流與交接
+
+實際操作依 [task-routing](../skills/task-routing/SKILL.md); Main 可直接完成相依工作, 子工作依實際範圍選擇設定, 不綁定 Main 的 model 或 reasoning. 回傳待驗收和已接受分開, 保留 owner, 相依, 來源狀態, 未完成事項及下一步
+
+可分享的工作流, 提示詞範例與研究取捨維護於 [Codex Playbook](https://github.com/gaze9999/codex-playbook); 本 repo 保留可執行的指示與工具, 不複製個人筆記或當次對話狀態. 詳細說明不作為所有任務的必讀 context

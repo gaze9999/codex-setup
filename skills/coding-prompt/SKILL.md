@@ -37,6 +37,7 @@ Create a minimal handoff-ready prompt when the requested deliverable is the prom
 - For a known project, identify only the target area and task-specific sources needed to act. Do not copy project governance into the prompt
 - For an unknown or non-project destination, provide the minimum context needed to stand alone without assuming access to this chat or local files
 - Include ownership, batching, delegation, or handoff mechanics only when the task requires them
+- For reusable prompt patterns or an unfamiliar handoff shape, read [prompt-patterns.md](references/prompt-patterns.md). Use only the matching pattern; ordinary prompt generation does not require reading it. Retain current authorization and pending acceptance when carrying work to another owner
 
 ## Model recommendation
 

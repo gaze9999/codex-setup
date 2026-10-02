@@ -6,6 +6,8 @@
 
 建立新專案治理架構時, 可用 [agent-governance project starter](./skills/agent-governance/assets/project-starter/README.md) 依實際專案類型產生精簡的 root 與 nested `AGENTS.md`, Codex subagent 角色及條件式 task 指引 範本隨該 Skill ZIP 提供, 不依賴固定的本機 repository 路徑
 
+可分享的操作方式, 提示詞與治理取捨另放 [Codex Playbook](https://github.com/gaze9999/codex-playbook); 本 repo 保留可直接安裝的工具包, 個人環境與工作紀錄不放入公開範例
+
 ## Skill catalog
 
 | 類別 | Skill | 用途 |
@@ -22,11 +24,24 @@
 | Frontend 與遊戲 | [Component Member Order](./skills/component-member-order/SKILL.md) | 安全整理 Angular Component class member 與可選 Signal I/O 遷移 |
 | Frontend 與遊戲 | [Unity Development](./skills/unity-development/SKILL.md) | 依實際 Unity version, package, serialized asset 與 build target 開發及驗證 |
 | Frontend 與遊戲 | [Vue Development](./skills/vue-development/SKILL.md) | 依實際 Vue, Nuxt 或 Vite stack 開發並保留 component, state, SSR 與 build contracts |
+| 證據與來源 | [Document Source Matching](./skills/document-source-matching/SKILL.md) | 對照來源身分與抽出版, 區分 hash 一致與內容涵蓋 |
+| 證據與來源 | [Environment Consistency Check](./skills/environment-consistency-check/SKILL.md) | 比對明確環境範圍, 保留存取失敗與部分掃描狀態 |
+| 證據與來源 | [Validation Evidence Review](./skills/validation-evidence-review/SKILL.md) | 檢視驗證證據的來源版本, 結果與未涵蓋範圍 |
 | 文件 | [Doc Updater](./skills/doc-updater/SKILL.md) | 實作後依 verified diff 同步必要的 docs, memo, changelog 或 API reference |
 | 文件 | [Document Production](./skills/document-production/SKILL.md) | 產生可交付的 PDF, DOCX 或 Markdown 正式文件 |
 | 文件 | [README Maintainer](./skills/readme-maintainer/SKILL.md) | 依 repository 證據建立或大幅重整 README |
 | 文件 | [License Maintainer](./skills/license-maintainer/SKILL.md) | 依授權與 ownership 證據維護 LICENSE, NOTICE, COPYRIGHT, SPDX 與 README 授權連結 |
 | Rules 與 Filter | [Filter Rule Maintenance](./skills/filter-rule-maintenance/SKILL.md) | 維護 AdGuard, uBlock Origin, DNS, hosts 與相似 filter/rewrite rules |
+
+## 工具與文件的分工
+
+| 來源 | 責任 |
+|---|---|
+| [my-py-tools](https://github.com/gaze9999/my-py-tools) | 不依賴 Codex 的通用 CLI 與 Python 核心工具 |
+| codex-setup | Codex 專用 Skills, agent 指示, MCP adapter 與安裝同步; 使用 versioned 通用核心而不複製實作 |
+| [codex-playbook](https://github.com/gaze9999/codex-playbook) | 可分享的去識別化工作方法, 範例, 治理與研究取捨 |
+
+個人環境與心得留在個人筆記, 專案規格與進度留在該專案. 一次任務只維護真正受影響的來源, 不要求同步全部位置或搬移既有獨立工具 repository
 
 ## 分層原則
 
