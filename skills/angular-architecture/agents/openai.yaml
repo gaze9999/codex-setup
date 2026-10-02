@@ -1,0 +1,4 @@
+interface:
+  display_name: "Angular Architecture"
+  short_description: "Trace Angular state, DI and integration boundaries"
+  default_prompt: "Use $angular-architecture to analyze the current Angular architecture and verify the smallest change supported by the actual versions and ownership."
