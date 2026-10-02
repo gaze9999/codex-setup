@@ -174,3 +174,5 @@
 - `未驗證`：產物存在，但缺少可用的 render／檢查能力或其他必要條件。
 
 不得把「檔案成功建立」直接等同於「版面 QA 通過」。
+
+`validate_markdown.py` 是由 my-py-tools canonical `markdown/validate_structure.py` 產生的 standalone snapshot; 不手動修改演算法. 檔頭保留 package version 與 source SHA-256, 維護時以該 repo 的 `scripts/export_markdown_validator.py --output <snapshot-file> --check` 檢查一致性; 使用 Skill 不需另一個 repo 或 core 安裝

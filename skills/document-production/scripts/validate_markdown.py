@@ -1,5 +1,9 @@
 #!/usr/bin/env python3
-"""Markdown structure validator for Document Production."""
+# GENERATED - DO NOT EDIT; use scripts/export_markdown_validator.py
+# Canonical source: my-py-tools/markdown/validate_structure.py
+# Package: my-py-document-core 0.2.1; API_VERSION=1
+# Source SHA-256: 1f0367072b93c35c3426079549863b5a08a6e741b2531a3d60d7c454e270ae83
+"""Bounded Markdown structure checks; not a complete Markdown parser."""
 
 from __future__ import annotations
 
@@ -13,28 +17,18 @@ FENCE_RE = re.compile(r"^\s*(`{3,}|~{3,})")
 VERSION_RE = re.compile(r"文件版本\s*[:：]\s*v\d+\b", re.IGNORECASE)
 
 
-def result(status: str, check: str, detail: str) -> None:
-    print(f"{status}: {check} - {detail}")
+def analyze(text: str) -> dict:
+    """Return bounded ATX/fence checks without reading or changing files."""
+    if not isinstance(text, str):
+        raise TypeError("text must be a string")
+    checks: list[dict[str, str]] = []
 
-
-def main() -> int:
-    parser = argparse.ArgumentParser(description="Validate Markdown document structure.")
-    parser.add_argument("file", type=Path)
-    args = parser.parse_args()
-    path = args.file
+    def result(status: str, check: str, detail: str) -> None:
+        checks.append({"status": status, "check": check, "detail": detail})
 
     failures = 0
     warnings = 0
 
-    if not path.is_file():
-        result("FAIL", "file", "file does not exist")
-        return 2
-
-    if path.suffix.lower() not in {".md", ".markdown"}:
-        result("FAIL", "extension", "expected .md or .markdown")
-        return 2
-
-    text = path.read_text(encoding="utf-8")
     lines = text.splitlines()
 
     headings: list[tuple[int, int, str]] = []
@@ -98,8 +92,30 @@ def main() -> int:
     else:
         result("INFO", "document-version", "no vX document version detected; acceptable unless the requested workflow requires one")
 
-    print(f"SUMMARY: failures={failures} warnings={warnings}")
-    return 1 if failures else 0
+    return {"checks": checks, "failures": failures, "warnings": warnings}
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description="Validate bounded Markdown structure without changing files.")
+    parser.add_argument("file", type=Path)
+    args = parser.parse_args(argv)
+    path = args.file
+    if not path.is_file():
+        print("FAIL: file - file does not exist")
+        return 2
+    if path.suffix.lower() not in {".md", ".markdown"}:
+        print("FAIL: extension - expected .md or .markdown")
+        return 2
+    try:
+        text = path.read_text(encoding="utf-8")
+    except (OSError, UnicodeError):
+        print("FAIL: file - unable to read UTF-8 file")
+        return 2
+    report = analyze(text)
+    for check in report["checks"]:
+        print(f"{check['status']}: {check['check']} - {check['detail']}".encode("ascii", "backslashreplace").decode("ascii"))
+    print(f"SUMMARY: failures={report['failures']} warnings={report['warnings']}")
+    return 1 if report["failures"] else 0
 
 
 if __name__ == "__main__":
